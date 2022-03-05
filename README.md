@@ -1,6 +1,8 @@
 # CanalBot
 A small Python script ~~not the best written~~ made to automate the addition of weekly anime episodes on my server.
 
+IT'S NOT RELEAESED YET BECAUSE OF CRASHING ERRORS (f u urllib3)
+
 ## Requirements :
 - Python 3.7 at least (get Python 3.9 👉 `apt-get install python3`)
 - a [qBittorrent](https://github.com/qbittorrent/qBittorrent) Web UI, hosted on the same machine as the script (you can use qbittorrent-nox 👉 `apt-get install qbittorrent-nox`)
