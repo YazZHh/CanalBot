@@ -23,7 +23,7 @@ rss_search_results = []
 last_torrent_added = None
 erai = []
 
-print("\033[1;96mCanalBot v1.2.Beta-4\033[0m")
+print("\033[1;96mCanalBot v0.1 Beta\033[0m")
 delete = input("Do you want to delete the torrents once they are no longer in the RSS search results ? [Y/n] : ")
 assert delete == 'y' or delete == 'Y' or delete == 'n' or delete == 'N', "Please specify your answer with y (yes) or n (no)"
 
