@@ -181,7 +181,7 @@ while True:
         print(f'\n\033[4m{request_count} requests made\033[0m')
         if encode == False:
             print("\033[6mWating 7 minutes before the next request..\033[0m")
-            sleep(2)
+            sleep(420)
 
     elif len(erai) == 5:
         print("RSS request failed, next try in 5 seconds..")
