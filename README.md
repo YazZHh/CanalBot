@@ -30,7 +30,7 @@ Default encoding settings (~500MB ouput file size, for a ~24mn episode):
 
 ## Usage guide :
 - Install all dependencies
-- Start qBitrorrent-nox Web UI if it wasn't already
+- Start qBitrorrent Web UI if it wasn't already
 - Download the file `CanalBot.py` into a direcroty
 - Create a file named `encoded-list.txt`, it will store the name of which files have already been encoded
 - Create another file named `anime-list.txt`, and enter **ONE** keyword (seperated by a return line) for each animes you want the script to take (you can add as many keywords as you want, as long as there is one keyword per anime)
