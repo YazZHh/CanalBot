@@ -1,5 +1,3 @@
-from urllib3.exceptions import HTTPError, RequestError, TimeoutError, ReadTimeoutError
-from requests.exceptions import ReadTimeout
 import feedparser
 from qbittorrent import Client
 import os
@@ -13,7 +11,7 @@ linuxuser = "user"                                      # Linux user who will ge
 
 user = "admin"                                          # Username of your qBittorrent Web UI
 password = "adminadmin"                                 # Password for the Web ui
-qb = Client('http://localhost:8080')                    # Change "http://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
+qb = Client('http://localhost:8080')                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
 
 rss_link = 'https://nyaa(.)si/?page=rss&u=Erai-raws'    # Just remove the "()" and run the script
 
@@ -31,7 +29,7 @@ assert delete == 'y' or delete == 'Y' or delete == 'n' or delete == 'N', "Please
 def request(test_request):
     try:
         test_request
-    except ReadTimeout or TimeoutError or ReadTimeoutError or HTTPError or RequestError:
+    except:
         print("\033[91m\033[1mRequest FAILED, next try in 5 seconds...\033[0m")
         sleep(5)
         request(test_request)
@@ -92,13 +90,13 @@ def clean_torrents():
                         clean_torrent_list(file_name)
 
 def clean_torrent_list(torrent):
-    temp = read_txt("already-encoded.txt")
+    temp = read_txt("encoded-list.txt")
     nb = 0
     for i in temp:
         if i == torrent:
             temp.pop(nb)
         nb += 1
-    write_txt("already-encoded.txt", temp)
+    write_txt("encoded-list.txt", temp)
 
 while True:
     # Connection request to the qBittorrent Web UI every 18 minutes (3*6)
@@ -109,7 +107,7 @@ while True:
 
     connection_cooldown_qbittorrent -= 1
     anime_list = read_txt("anime-list.txt")
-    encoded_list = read_txt("already-encoded.txt")
+    encoded_list = read_txt("encoded-list.txt")
 
     print("\n\033[93mCollecting RSS feed..\033[0m")
     erai = request(feedparser.parse(rss_link))
@@ -151,8 +149,9 @@ while True:
                     anime_name = file_name[12:index]
                     episode_number = file_name[index + 3:index + 5]
                     destination_folder_name = anime_name.replace(" ", "-").lower()
+                    point_name = anime_name.replace(" ", ".")
                     input_file_name = input_file_name = file_name.replace(" ", "\ ")
-                    output_file_name = f'{anime_name}.s1e{episode_number}.{suffix}.mp4'
+                    output_file_name = f'{point_name}.s1e{episode_number}.{suffix}.mp4'
 
                     os.system(f'mkdir -p {target_directory}/animes/{destination_folder_name}/s1')
 
@@ -161,11 +160,7 @@ while True:
                     encode = True
 
                     encoded_list.append(file_name)
-                    write_txt("already-encoded.txt", encoded_list)
-
-                    # encoded_list_str = '\n'.join(encoded_list)
-                    # data3 = open("already-encoded.txt", "w")
-                    # data3.write(encoded_list_str)
+                    write_txt("encoded-list.txt", encoded_list)
 
                     last_torrent_added = file_name
 
