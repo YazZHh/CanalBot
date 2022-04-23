@@ -3,6 +3,9 @@ from qbittorrent import Client
 import os
 import time
 
+delete_torrents_afterwards = False                      # Delete torrents after they are no longer in the RSS search results
+auto_encode = True                                      # Set to True if you want to automatically encode the torrents
+
 lang = "language"                                       # Basically language you want the subtitles to be
 suffix = "vost"                                         # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4
 target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored (Don't put a "/" at the end), please note that the sctipt will create a subfolder in this directory named "anime"
@@ -11,20 +14,18 @@ linuxuser = "user"                                      # Linux user who will ge
 
 user = "admin"                                          # Username of your qBittorrent Web UI
 password = "adminadmin"                                 # Password for the Web ui
-qb = Client('http://localhost:8080')                    # Change "http://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:PORT" if you don't have a domain name
+qb = Client('http://localhost:8080')                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
 
 rss_link = 'https://nyaa(.)si/?page=rss&u=Erai-raws'    # Just remove the "()" and run the script
 
 request_count = 0
 connection_cooldown_qbittorrent = 0
 rss_search_results = []
-last_torrent_added = None
+last_torrent_proceed = None
 erai = []
 start_time = time.time()
 
-print("\033[1;96mCanalBot v0.2Beta-1\033[0m")
-delete = input("Do you want to delete the torrents once they are no longer in the RSS search results ? [Y/n] : ")
-assert delete == 'y' or delete == 'Y' or delete == 'n' or delete == 'N', "Please specify your answer with y (yes) or n (no)"
+print("\033[1;96mCanalBot v0.2Beta-3\033[0m")
 
 class index:
     def index_verify(file_name, index):
@@ -47,15 +48,20 @@ class index:
                 return index.find_index(file_name, " - ", i)
 
 class checks:
-    def check_if_encoded(torrent_name):
-        for i in encoded_list:
+    def check_if_processed(torrent_name):
+        check = False
+        for i in proceed_list:
             if torrent_name == i:
-                return True
+                check = True
+        return check
 
     def check_if_added(torrent_name):
+        check = False
+        # print(f'Start check_if_added({torrent_name})')
         for torrent in qb.torrents():
             if torrent_name == torrent['name']:
-                return True
+                check = True
+        return check
 
     def check_if_on_the_list(torrent):
         check = False
@@ -67,18 +73,19 @@ class checks:
 
 class torrents:
     def rss_search(keyword, quality):
+        erai_rss = erai.entries
         entry_number = -1
-        for i in erai.entries:
+        for i in erai_rss:
             entry_number += 1
             find = i.title.find(keyword)
             if find != -1:
-                q = erai.entries[entry_number].title.find(quality)
-                torrent_name = erai.entries[entry_number].title
+                q = erai_rss[entry_number].title.find(quality)
+                torrent_name = erai_rss[entry_number].title
                 if q != -1:
-                    if checks.check_if_added(erai.entries[entry_number].title) == None:
-                        qb.download_from_link(erai.entries[entry_number].link)
-                        rss_search_results.append(erai.entries[entry_number].title)
-                        print(f'\033[1;96m\033[1mFound : "{erai.entries[entry_number].title}"\033[0m", torrent successfully added')
+                    if checks.check_if_added(erai_rss[entry_number].title) == False:
+                        qb.download_from_link(erai_rss[entry_number].link)
+                        rss_search_results.append(erai_rss[entry_number].title)
+                        print(f'\033[1;96m\033[1mFound : "{erai_rss[entry_number].title}"\033[0m, torrent successfully added')
                         break
                     else:
                         print(f'\033[90mTorrent "{torrent_name}" have already been added..\033[0m')
@@ -86,7 +93,7 @@ class torrents:
                         rss_search_results.append(erai.entries[entry_number].title)
                         break
         if find == -1:
-            not_found.append(anime_list[a_l])
+            not_found.append(keyword)
 
     def clean_torrents():
         delete_list = list(set(previous_rss_search_results) - set(rss_search_results))
@@ -96,61 +103,78 @@ class torrents:
             for file in delete_list:
                 for torrent in torrents_info:
                     file_name, hash = torrent['name'], torrent['hash']
-                    if file == file_name and file_name[0:11] == "[Erai-raws]" and checks.check_if_encoded(file_name) == True and checks.check_if_added(file_name) == True:
+                    if file == file_name and file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == True and checks.check_if_added(file_name) == True:
                             print(f'\033[1;91mDeleting "{file_name}"\033[0m')
                             qb.delete_permanently(hash)
                             torrents.clean_torrent_list(file_name)
 
     def clean_torrent_list(torrent):
-        temp = txt.read_txt("encoded-list.txt")
+        temp = txt.read_txt_to_list("encoded-list.txt")
         nb = 0
         for i in temp:
             if i == torrent:
                 temp.pop(nb)
             nb += 1
-        txt.write_txt("encoded-list.txt", temp)
+        txt.write_list_to_txt("encoded-list.txt", temp)
 
 class txt:
-    def read_txt(file):
+    def read_txt_to_list(file):
         temp = open(file, "r")
         return list(temp.read().split("\n"))
 
-    def write_txt(file, list):
+    def write_list_to_txt(file, list):
         list = '\n'.join(list)
         temp = open(file, "w")
         temp.write(list)
 
+def qb_request():
+    success = False
+    while success == False:
+        try:
+            qb.login(user, password)
+            success = True
+        except:
+            print("\033[1;91mError while connecting to qBittorrent Web UI, next try in 5 seconds..\033[0m")
+            time.sleep(5)
+
 # Function that (is supposed to) prevent the program from crashing if a request fail..
-def request(test_request):
-    try:
-        test_request
-    except:
-        print("\033[91m\033[1mRequest FAILED, next try in 5 seconds...\033[0m")
-        time.sleep(5)
-        request(test_request)
-    return test_request
+# def request(test_request):
+#     success = False
+#     while success == False:
+#         try:
+#             test_request
+#             success = True
+#         except:
+#             print("\033[91m\033[1mRequest FAILED, next try in 5 seconds...\033[0m")
+#             time.sleep(5)
+#     print(f'\033[92m\033[1m"{test_request}Request SUCCESS\033[0m') # DEBUG
+#     return test_request
 
 def calcul_time(time_in_seconds):
-    hours = time_in_seconds // 3600 
-    minutes = (time_in_seconds - (3600 * hours)) // 60
-    seconds = time_in_seconds - (3600 * hours) - (60 * minutes)
-    return f'{hours}h {minutes}min {seconds}s'
+    days = time_in_seconds // 86400
+    hours = (time_in_seconds - (86400 * days)) // 3600 
+    minutes = (time_in_seconds - (86400 * days) - (3600 * hours)) // 60
+    if days == 0 and hours == 0:
+        return f'{minutes} minutes'
+    elif days == 0:
+        return f'{hours} hours and {minutes} minutes'
+    else:
+        return f'{days}d {hours}h {minutes}min'
 
 while True:
     # Connection request to the qBittorrent Web UI every 21 minutes (3*7)
     if connection_cooldown_qbittorrent <= 0:
         print("\n\033[1mConnection request to the qBittorrent Web UI..\033[0m")
-        request(qb.login(user, password))
-        connection_cooldown_qbittorrent = 3
+        qb_request()
+        connection_cooldown_qbittorrent = 5
 
     connection_cooldown_qbittorrent -= 1
-    anime_list = txt.read_txt("anime-list.txt")
-    encoded_list = txt.read_txt("encoded-list.txt")
+    anime_list = txt.read_txt_to_list("anime_list.txt")
+    proceed_list = txt.read_txt_to_list("proceed_list.txt")
 
     print("\n\033[93mCollecting RSS feed..\033[0m")
-    erai = request(feedparser.parse(rss_link))
+    erai = feedparser.parse(rss_link)
     
-    print("len(erai) :", len(erai))
     if len(erai) == 9:          # lengh of RSS request is 9 if it was successful (idk why, maybe useless now with the request() function)
         request_count += 1
         not_found = []
@@ -159,57 +183,98 @@ while True:
         already_found = []
 
         print("\033[1mLast torrent added in the RSS feed\033[0m :", erai.entries[0].title)
-        for i in range(len(anime_list)):
-            a_l = i
-            if anime_list[i] != "":
-                request(torrents.rss_search(anime_list[i], '1080p'))
+        crash = False
+        try:
+            for anime in anime_list:
+                if anime != "":
+                    torrents.rss_search(anime, '1080p')
+        except:
+            print("\033[1;91mError while searching for new torrents / Error while retrieving Torrents info from the qBittorrent Web UI\033[0m")
+            crash = True
 
-        not_found_list = ', '.join(not_found)
-        if len(not_found_list) != 0:
-            print("No results for :", not_found_list)
+        if crash == False:  # DEBUG
+            not_found_list = ', '.join(not_found)
+            if len(not_found_list) != 0:
+                print("No results for :", not_found_list)
 
-        if last_torrent_added != None:
-            print("Last torrent encoded :", last_torrent_added)
+        if last_torrent_proceed != None:
+            print("\033[92mLast torrent proceed\033[0m :", last_torrent_proceed)
 
-        print("Total run time :", calcul_time(round((time.time() - start_time))))
+        if request_count != 1:
+            print("Total run time :", calcul_time(round((time.time() - start_time))))
 
         torrents_info = qb.torrents()
         encode = False
 
-        for torrent in torrents_info:
-            file_name = torrent['name']
-            if file_name[0:11] == "[Erai-raws]" and checks.check_if_encoded(file_name) == None and checks.check_if_on_the_list(file_name) == True:
-                if torrent['state'] != 'downloading':
-                    # Setting up the encoding parameters (matches erai-raws's releases)
-                    index_rank = index.search_index(file_name)
-                    anime_name = file_name[12:index_rank]
-                    episode_number = file_name[index_rank + 3:index_rank + 5]
-                    destination_folder_name = anime_name.replace(" ", "-").lower()
-                    point_name = anime_name.replace(" ", ".")
-                    input_file_name = file_name.replace(" ", "\ ")
-                    output_file_name = f'{point_name}.s1e{episode_number}.{suffix}.mp4'
+        if auto_encode == True:
+            for torrent in torrents_info:
+                file_name = torrent['name']
+                if file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == False and checks.check_if_on_the_list(file_name) == True:
+                    if torrent['state'] != 'downloading' or torrent['state'] != 'stalledDL':
+                        # Setting up the encoding parameters (matches erai-raws's releases)
+                        index_rank = index.search_index(file_name)
+                        anime_name = file_name[12:index_rank]
+                        episode_number = file_name[index_rank + 3:index_rank + 5]
+                        destination_folder_name = anime_name.replace(" ", "-").lower()
+                        point_name = anime_name.replace(" ", ".")
+                        input_file_name = file_name.replace(" ", "\ ")
+                        output_file_name = f'{point_name}.s1e{episode_number}.{suffix}.mp4'
 
-                    os.system(f'mkdir -p {target_directory}/animes/{destination_folder_name}/s1')
+                        os.system(f'mkdir -p {target_directory}/animes/{destination_folder_name}/s1')
+                        print(f'\033[96mEncoding {file_name} to {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}\033[0m..')
+                        os.system(f'HandBrakeCLI -i {torrents_location}/{input_file_name} -o {target_directory}/animes/{destination_folder_name}/s1/{output_file_name} -vfr -B 512 -b 2500 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn')
+                        print("\033[92mDone !\033[0m")
 
-                    print("Encoding", file_name)
-                    os.system(f'HandBrakeCLI -i {torrents_location}/{input_file_name} -o {target_directory}/animes/{destination_folder_name}/s1/{output_file_name} -vfr -B 512 -b 2500 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn')
-                    encode = True
+                        encode = True
 
-                    encoded_list.append(file_name)
-                    txt.write_txt("encoded-list.txt", encoded_list)
+                        proceed_list.append(file_name)
+                        txt.write_list_to_txt("proceed_list.txt", proceed_list)
 
-                    last_torrent_added = file_name
+                        last_torrent_proceed = file_name
 
-                    os.system(f'sudo chown {linuxuser} {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
-                    os.system(f'sudo chmod 777 {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
+                        # Giving the file the right permissions
+                        os.system(f'sudo chown {linuxuser} {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
+                        os.system(f'sudo chmod 775 {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
 
-                elif torrent['state'] == 'downloading':
-                    print(f'File {file_name} is still downloading')
+                    elif torrent['state'] == 'downloading':
+                        print(f'\033[31mFile {file_name} is still downloading\033[0m')
+        
+        else:
+            for torrent in torrents_info:
+                file_name = torrent['name']
+                if file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == False and checks.check_if_on_the_list(file_name) == True:
+                    if torrent['state'] != 'downloading' or torrent['state'] != 'stalledDL':
+                        index_rank = index.search_index(file_name)
+                        anime_name = file_name[12:index_rank]
+                        episode_number = file_name[index_rank + 3:index_rank + 5]
+                        destination_folder_name = anime_name.replace(" ", "-").lower()
+                        point_name = anime_name.replace(" ", ".")
+                        input_file_name = file_name.replace(" ", "\ ")
+                        output_file_name = f'{point_name}.s1e{episode_number}.{suffix}.mkv'
 
-        if request_count != 1 and delete == 'y' or delete == 'Y':
+                        # Copying the file to the destination folder
+                        print(f'\033[96mCopying {file_name} to {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}..\033[0m')
+                        os.system(f'cp {torrents_location}/{input_file_name} {target_directory}/animes/{destination_folder_name}/s1/ && mv {target_directory}/animes/{destination_folder_name}/s1/{input_file_name} {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
+                        print("\033[92mDone !\033[0m")
+
+                        proceed_list.append(file_name)
+                        txt.write_list_to_txt("proceed_list.txt", proceed_list)
+
+                        last_torrent_proceed = file_name
+
+                        # Giving the file the right permissions
+                        os.system(f'sudo chown {linuxuser} {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
+                        os.system(f'sudo chmod 775 {target_directory}/animes/{destination_folder_name}/s1/{output_file_name}')
+
+                    elif torrent['state'] == 'downloading':
+                            print(f'\033[31mFile {file_name} is still downloading\033[0m')
+
+
+        if request_count != 1 and delete_torrents_afterwards == True:
             torrents.clean_torrents()
 
         print(f'\n\033[4m{request_count} requests made\033[0m')
+
         if encode == False:
             print("\033[6mWating 7 minutes before the next request..\033[0m")
             time.sleep(420)
