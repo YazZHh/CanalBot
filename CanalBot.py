@@ -174,7 +174,7 @@ while True:
     print("\n\033[93mCollecting RSS feed..\033[0m")
     erai = feedparser.parse(settings.rss_link)
     
-    if len(erai) == 9:          # lengh of RSS request is 9 if it was successful (idk why, maybe useless now with the request() function)
+    if len(erai) == 9:          # lenght = 9 if RSS request success
         request_count += 1
         not_found = []
         previous_rss_search_results = rss_search_results
