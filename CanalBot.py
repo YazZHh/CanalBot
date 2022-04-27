@@ -25,7 +25,7 @@ erai = []
 start_time = time.time()
 crash = False
 
-print("\033[1;96mCanalBot v0.2Beta-3\033[0m")
+print("\033[1;96mCanalBot v0.2\033[0m")
 
 class index:
     def index_verify(file_name, index):
