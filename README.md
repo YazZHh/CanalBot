@@ -8,6 +8,7 @@ Originally made to work on a **linux** server, with [JellyFin](https://github.co
 - [HandBrakeCLI](https://github.com/HandBrake/HandBrake) installed on your linux distro (dpkg, not the flatpack version)
 - [feedparser](https://github.com/kurtmckee/feedparser), a python module
 - [python-qBittorrent](https://github.com/v1k45/python-qBittorrent), another python module
+
 ### Install all requirements :
 ```
 apt-get install python3
@@ -21,7 +22,8 @@ apt-get update && apt-get upgrade
 ## What does this script do ?
 It will check for new episodes in the RSS every 7 minutes *(exactly 7 minutes to avoid getting tempban from DNS servers or Nyaa)* and if it finds one, it will download and encode *(you can choose between encoding or copying the file)* the episode to the selected location
 
-**This script was intended to work with Erai-raws's torrents, giving the script another RSS feed will break the script.** Sadly, is currently limited to adding only the first season of an anime, as Erai-Raws doesn't specify the season in their episode releases.
+**This script was intended to work with Erai-raws's torrents, giving the script another RSS feed will break the script.**
+Sadly, is currently limited to adding only the first season of an anime, as Erai-Raws doesn't specify the season in their episode releases (I'm working to add a way to specify the season number in anime_list.txt THANKS ERAI-RAWS 👏👏)
 
 Default encoding settings *(~500MB ouput file size, for a ~24mn episode)*: 
 - Bitrate : 2500kbps
@@ -35,7 +37,7 @@ Default encoding settings *(~500MB ouput file size, for a ~24mn episode)*:
 - Start qBitrorrent Web UI if it wasn't already
 - Download the file `CanalBot.py` into a direcroty
 - Create a file named `proceed_list.txt`, it will store the name of which files have already been encoded
-- Create another file named `anime_list.txt`, and enter **ONE** keyword, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)*
+- Create another file named `anime_list.txt`, and enter **ONE** keyword per anime, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)*
 - Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings :
   * `delete_torrents_afterwards` if set to True, will delete permanently torrent file *(the downloaded one, not the file encoded or copied)* from disk and qBittorrent Web UI
   * `auto_encode` do what its name does, if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location
@@ -48,6 +50,7 @@ Default encoding settings *(~500MB ouput file size, for a ~24mn episode)*:
   * `password` is the password of the qBittorrent Web UI
   * `qb` set the link to the qBittorrent Web UI
 
+- Now run the script in a screen on your linux server and that's it.
 - If the script crashes, just restart it, it won't re-add episodes, or re-encode episode.
 
 ## Customisation
