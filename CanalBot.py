@@ -12,8 +12,8 @@ class settings:
     lang = "english"                                        # Language you want the subtitles to be
     suffix = "suffix"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4
     quality = "1080p"                                       # Video quality of the torrents
-    target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored (Don't put a "/" at the end), please note that the sctipt will create a subfolder in this directory named "anime"
-    torrents_location = "/animes/torrent/directory"         # Episodes files should be in this directory (Don't put a "/" at the end), please configure your qBittorrent Web UI
+    target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
+    torrents_location = "/animes/torrent/directory"         # Episodes files should be in this directory, please configure your qBittorrent Web UI
     linuxuser = "user"                                      # Linux user who will get the acces rights to the files
     user = "admin"                                          # Username of your qBittorrent Web UI
     password = "adminadmin"                                 # Password for the Web ui
