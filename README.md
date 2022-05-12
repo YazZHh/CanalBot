@@ -25,25 +25,26 @@ It will check for new episodes in the RSS every 7 minutes *(exactly 7 minutes to
 **This script was intended to work with Erai-raws's torrents, giving the script another RSS feed will break the script.**
 Sadly, is currently limited to adding only the first season of an anime, as Erai-Raws doesn't specify the season in their episode releases (I'm working to add a way to specify the season number in anime_list.txt THANKS ERAI-RAWS 👏👏)
 
-Default encoding settings *(~500MB ouput file size, for a ~24mn episode)*: 
-- Bitrate : 2500kbps
-- Audio Bitrate : 512kbps
+Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)*
+- Bitrate : 2500kbps x264
+- Audio Bitrate : 512kbps 
 - Subtitle : Hardub
 
 *you can of course change the encoding settings, please refer to [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*
 
 ## Usage guide :
 - Install all dependencies
-- Start qBitrorrent Web UI if it wasn't already
+- Start qBitrorrent Web UI if it wasn't already (with command `qbittorrent-nox -d`)
 - Download the file `CanalBot.py` into a direcroty
-- Create a file named `proceed_list.txt`, it will store the name of which files have already been encoded
-- Create another file named `anime_list.txt`, and enter **ONE** keyword per anime, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)*
+- Create a file named `proceed_list.txt`, it will store the name of which files have already been encoded, no need to fill this file.
+- Create another file named `anime_list.txt`, and enter **ONE** keyword per anime seperated by a return line, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)*
 - Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings :
   * `delete_torrents_afterwards` if set to True, will delete permanently torrent file *(the downloaded one, not the file encoded or copied)* from disk and qBittorrent Web UI
-  * `auto_encode` do what its name does, if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location
-  * `lang` is used to choose the language of subtitles that will be burned in the video (you can choose to not burn the subtitles, see Customisation)
+  * `auto_encode` do what its name does : if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location
+  * `lang` is used to choose the language of subtitles that will be burned in the video (you can leave it blank if you have set `auto_encode` to False)
   * `suffix` define the end of the file. Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, for French subtitles you could put "vostfr" for instance.
-  * `target_directory` tells the script where does the animes go
+  * `quality` obviously the video quality of the episodes you want the script to download (you can choose between 1080p, 720p and 480p)
+  * `target_directory` tells the script where does the episodes will be storen. Structure of the directory at the end : `target_directory/animes/anime-name/s1/episode.s1eXX.suffix.mp4`
   * `torrents_location` define on which directory torrents are downloaded
   * `linuxuser` specify which linux user shoud own the files
   * `user` is the user of the qBittorrent Web UI
