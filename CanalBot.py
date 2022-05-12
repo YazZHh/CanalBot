@@ -5,13 +5,15 @@ import os
 import time
 
 # Please change the following variables to your own settings
+
 class settings:
     delete_torrents_afterwards = False                      # Delete torrents after they are no longer in the RSS search results
     auto_encode = True                                      # Set to True if you want to automatically encode the torrents
-    lang = "french"                                         # Basically language you want the subtitles to be
-    suffix = "vost"                                         # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4/mkv
+    lang = "english"                                        # Language you want the subtitles to be
+    suffix = "suffix"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4
+    quality = "1080p"                                       # Video quality of the torrents
     target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored (Don't put a "/" at the end), please note that the sctipt will create a subfolder in this directory named "anime"
-    torrents_location = "/anime/torrent/directory"          # Episodes files should be in this directory (Don't put a "/" at the end), please configure your qBittorrent Web UI
+    torrents_location = "/animes/torrent/directory"         # Episodes files should be in this directory (Don't put a "/" at the end), please configure your qBittorrent Web UI
     linuxuser = "user"                                      # Linux user who will get the acces rights to the files
     user = "admin"                                          # Username of your qBittorrent Web UI
     password = "adminadmin"                                 # Password for the Web ui
@@ -24,8 +26,9 @@ last_torrent_proceed = None
 erai = []
 start_time = time.time()
 crash = False
+fail_count = 0
 
-print("\033[1;96mCanalBot v0.2\033[0m")
+print("\033[1;96mCanalBot v0.2.1\033[0m")
 
 class index:
     def index_verify(file_name, index):
@@ -88,7 +91,6 @@ class torrents:
                         break
                     else:
                         print(f'\033[90mTorrent "{torrent_name}" have already been added..\033[0m')
-                        already_found.append(erai.entries[entry_number].title)
                         rss_search_results.append(erai.entries[entry_number].title)
                         break
         if find == -1:
@@ -108,13 +110,13 @@ class torrents:
                             torrents.clean_torrent_list(file_name)
 
     def clean_torrent_list(torrent):
-        temp = txt.read_txt_to_list("encoded-list.txt")
+        temp = txt.read_txt_to_list("proceed_list.txt")
         nb = 0
         for i in temp:
             if i == torrent:
                 temp.pop(nb)
             nb += 1
-        txt.write_list_to_txt("encoded-list.txt", temp)
+        txt.write_list_to_txt("proceed_list.txt", temp)
 
 class txt:
     def read_txt_to_list(file):
@@ -134,7 +136,6 @@ def qb_request():
             success = True
         except:
             print("\033[1;91mError while connecting to qBittorrent Web UI, please restart the script.\033[0m")
-            time.sleep(5)
 
 def calcul_time(time_in_seconds):
     days = time_in_seconds // 86400
@@ -152,7 +153,7 @@ def search_for_new_torrents():
     try:
         for anime in anime_list:
             if anime != "":
-                torrents.rss_search(anime, '1080p')
+                torrents.rss_search(anime, settings.quality)
     except:
         print("\033[1;91mError while searching for new torrents / Error while retrieving Torrents info from the qBittorrent Web UI\033[0m")
         crash = True
@@ -171,16 +172,25 @@ while True:
     anime_list = txt.read_txt_to_list("anime_list.txt")
     proceed_list = txt.read_txt_to_list("proceed_list.txt")
 
+    if crash == True:
+        qb_request()
+
     print("\n\033[93mCollecting RSS feed..\033[0m")
     erai = feedparser.parse(settings.rss_link)
     
+    if fail_count >= 5:
+        print("\033[1;91mError while retrieving RSS feed, please check your internet connection and restart the script.\033[0m")
+        exit()
+
     if len(erai) == 9:          # lenght = 9 if RSS request success
+        fail_count = 0
         request_count += 1
         not_found = []
-        previous_rss_search_results = rss_search_results
-        rss_search_results = []
-        already_found = []
         encode = False
+
+        if crash == False:
+            previous_rss_search_results = rss_search_results
+            rss_search_results = []
 
         print("\033[1mLast torrent added in the RSS feed\033[0m :", erai.entries[0].title)
         timeout_search()
@@ -202,7 +212,7 @@ while True:
                 for torrent in torrents_info:
                     file_name = torrent['name']
                     if file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == False and checks.check_if_on_the_list(file_name) == True:
-                        if torrent['state'] != 'downloading' or torrent['state'] != 'stalledDL':
+                        if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL':
                             # Setting up the encoding parameters (matches erai-raws's releases)
                             index_rank = index.search_index(file_name)
                             anime_name = file_name[12:index_rank]
@@ -214,7 +224,7 @@ while True:
 
                             os.system(f'mkdir -p {settings.target_directory}/animes/{destination_folder_name}/s1')
                             print(f'\033[96mEncoding {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s1/{output_file_name}\033[0m..')
-                            os.system(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s1/{output_file_name} -vfr -B 512 -b 2500 -T -2 -O --subtitle-lang-list {settings.lang} --subtitle-burn')
+                            os.system(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s1/{output_file_name} -vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {settings.lang} --subtitle-burn')
                             print("\033[92mDone !\033[0m")
 
                             encode = True
@@ -275,4 +285,5 @@ while True:
 
     elif len(erai) == 5:
         print("RSS request failed, next try in 5 seconds..")
+        fail_count += 1
         time.sleep(5)
