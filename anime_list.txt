@@ -1,5 +1,6 @@
-Spy
-Kakkou
-Otomege
-Aharen-san
-Tomodachi
+Spy, 1
+Kakkou, 1
+Kaguya-sama, 3
+Otomege, 1
+Aharen-san, 1
+Tomodachi, 1
