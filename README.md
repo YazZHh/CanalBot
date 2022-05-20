@@ -1,5 +1,5 @@
 # CanalBot
-A small Python script ~~not the best written~~ made to automate the addition of weekly anime episodes on my server, withe the help of a certain RSS page on a cat torrent website.
+A small Python script ~~not the best written~~ made to automate the addition of weekly anime episodes on my server, with the help of Erai-raws's RSS page on Nyaa.
 Originally made to work on a **linux** server, with [JellyFin](https://github.com/jellyfin/jellyfin), Plex or other Streaming service
 
 ## Requirements :
