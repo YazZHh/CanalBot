@@ -236,13 +236,13 @@ while True:
                             episode_number = file_name[index_rank + 3:index_rank + 5]
                             destination_folder_name = anime_name.replace(" ", "-").lower()
                             input_file_name = file_name.replace(" ", "\ ")
-                            output_file_name = f'{file_info[2]}.s{file_info[1]}e{episode_number}.{settings.suffix}.mp4'
+                            point_name = file_info[2].replace(" ", ".")
+                            output_file_name = f'{point_name}.s{file_info[1]}e{episode_number}.{settings.suffix}.mp4'
 
                             if settings.auto_encode == True:    # Encode the file
                                 os.system(f'mkdir -p {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}')
                                 print(f'\033[96mEncoding {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}\033[0m..')
                                 os.system(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name} {settings.handbrake_settings}')
-                                print(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name} {settings.handbrake_settings}')
                                 print("\033[92mDone !\033[0m")
                                 encode = True
 
