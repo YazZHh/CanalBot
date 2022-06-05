@@ -36,7 +36,7 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 - Start qBitrorrent Web UI if it wasn't already (with command `qbittorrent-nox -d`)
 - Download the file `CanalBot.py` into a direcroty
 - Create a file named `proceed_list.txt`, it will store the name of which files have already been encoded, no need to fill this file.
-- Create another file named `anime_list.txt`, and on each line, enter **ONE** keyword per anime, then specify its season number and finally enter the full Anime name (It xwill be part of each episode file), all separated by a comma and a space. Do this for each anime you want the script to add, separated by a return line, *see the [anime_list.txt example]*(https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)
+- Create another file named `anime_list.txt`, and on each line, enter **ONE** keyword per anime, then specify its season number and finally enter the full Anime name (It will be part of each episode file), all separated by a comma and a space. Do this for each anime you want the script to add, separated by a return line, *see the [anime_list.txt example]*(https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)
 - Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings :
   * `delete_torrents_afterwards` if set to True, will delete permanently torrent file *(the downloaded one, not the file encoded or copied)* from disk and qBittorrent Web UI
   * `auto_encode` do what its name does : if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location
