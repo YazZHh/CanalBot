@@ -230,16 +230,15 @@ while True:
                             file_info = checks.get_anime_info(file_name)
 
                             # Setting up the encoding parameters (matches erai-raws's releases)
-                            first_index_occurence = file_name.find(" - ")
+                            anime_name = file_info[2]
                             index_rank = index.search_index(file_name)              # Search for the real index, because Erai-raws's releases names are not always in the same format, huge thanks to them !
-                            anime_name = file_name[12:first_index_occurence]
                             episode_number = file_name[index_rank + 3:index_rank + 5]
                             destination_folder_name = anime_name.replace(" ", "-").lower()
                             input_file_name = file_name.replace(" ", "\ ")
-                            point_name = file_info[2].replace(" ", ".")
+                            point_name = anime_name.replace(" ", ".")
                             output_file_name = f'{point_name}.s{file_info[1]}e{episode_number}.{settings.suffix}.mp4'
 
-                            if settings.auto_encode == True:    # Encode the file
+                            if settings.auto_encode == True:    # Encoding the file
                                 os.system(f'mkdir -p {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}')
                                 print(f'\033[96mEncoding {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}\033[0m..')
                                 os.system(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name} {settings.handbrake_settings}')
