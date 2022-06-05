@@ -12,6 +12,7 @@ class settings:
     lang = "english"                                        # Language you want the subtitles to be
     suffix = "suffix"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4
     quality = "1080p"                                       # Video quality of the torrents
+    handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
     target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
     torrents_location = "/animes/torrent/directory"         # Episodes files should be in this directory, please configure your qBittorrent Web UI
     linuxuser = "user"                                      # Linux user who will get the acces rights to the files
@@ -28,7 +29,7 @@ start_time = time.time()
 crash = False
 fail_count = 0
 
-print("\033[1;96mCanalBot v0.3\033[0m")
+print("\033[1;96mCanalBot v0.4\033[0m")
 
 class index:
     def index_verify(file_name, index):
@@ -69,15 +70,15 @@ class checks:
         check = False
         for i in anime_list:
             if i != "":
-                if torrent.find(i) != -1:
+                if torrent.find(i[0]) != -1:
                     check = True
         return check
 
-    def find_anime_keyword(torrent_name):
-        for i in anime_list.keys():
+    def get_anime_info(torrent_name):
+        for i in anime_list:
             if i != "":
-                if torrent_name.find(i) != -1:
-                    return i
+                if torrent_name.find(i[0]) != -1:
+                    return i[0], i[1], i[2]
         return None
 
 class torrents:
@@ -91,15 +92,16 @@ class torrents:
                 q = erai_rss[entry_number].title.find(quality)
                 torrent_name = erai_rss[entry_number].title
                 if q != -1:
-                    if checks.check_if_added(erai_rss[entry_number].title) == False:
-                        settings.qb.download_from_link(erai_rss[entry_number].link)
-                        rss_search_results.append(erai_rss[entry_number].title)
-                        print(f'\033[1;96m\033[1mFound : "{erai_rss[entry_number].title}"\033[0m, torrent successfully added')
-                        break
-                    else:
-                        print(f'\033[90mTorrent "{torrent_name}" have already been added..\033[0m')
-                        rss_search_results.append(erai.entries[entry_number].title)
-                        break
+                    if erai_rss[entry_number].title.find("HEVC") == -1:     # Get rid of the shitty HEVC torrents
+                        if checks.check_if_added(erai_rss[entry_number].title) == False:
+                            settings.qb.download_from_link(erai_rss[entry_number].link)
+                            rss_search_results.append(erai_rss[entry_number].title)
+                            print(f'\033[1;96m\033[1mFound : "{erai_rss[entry_number].title}"\033[0m, torrent successfully added')
+                            break
+                        else:
+                            print(f'\033[90mTorrent "{torrent_name}" have already been added..\033[0m')
+                            rss_search_results.append(erai.entries[entry_number].title)
+                            break
         if find == -1:
             not_found.append(keyword)
 
@@ -130,9 +132,9 @@ class txt:
         temp = open(file, "r")
         return list(temp.read().split("\n"))
 
-    def read_txt_to_dict(file):
+    def read_txt_to_list_of_lists(file):
         temp = open(file, "r")
-        return dict(x.split(", ") for x in temp.read().split("\n"))
+        return list(x.split(", ") for x in temp.read().split("\n"))
 
     def write_list_to_txt(file, list):
         list = '\n'.join(list)
@@ -162,9 +164,9 @@ def calcul_time(time_in_seconds):
 def search_for_new_torrents():
     crash = False
     try:
-        for anime in anime_list.keys():
-            if anime != "":
-                torrents.rss_search(anime, settings.quality)
+        for anime in anime_list:
+            if anime[0] != "":
+                torrents.rss_search(anime[0], settings.quality)
     except:
         print("\033[1;91mError while searching for new torrents / Error while retrieving Torrents info from the qBittorrent Web UI\033[0m")
         crash = True
@@ -174,13 +176,13 @@ def timeout_search():
     stop_event = Event()
     action_thread = Thread(target=search_for_new_torrents)
     action_thread.start()
-    action_thread.join(timeout=10)
+    action_thread.join(timeout=5)
     stop_event.set()
 
 qb_request()
 
 while True:
-    anime_list = txt.read_txt_to_dict("anime_list.txt")
+    anime_list = txt.read_txt_to_list_of_lists("anime_list.txt")
     proceed_list = txt.read_txt_to_list("proceed_list.txt")
 
     if crash == True:
@@ -188,7 +190,7 @@ while True:
 
     print("\n\033[93mCollecting RSS feed..\033[0m")
     erai = feedparser.parse(settings.rss_link)
-    
+
     if fail_count >= 5:
         print("\033[1;91mError while retrieving RSS feed, please check your internet connection and restart the script.\033[0m")
         exit()
@@ -217,18 +219,15 @@ while True:
 
         if request_count != 1:
             print("Total run time :", calcul_time(round((time.time() - start_time))))
-        
+
         if crash == False:
-
-            if settings.auto_encode == True:
-
                 for torrent in torrents_info:
                     file_name = torrent['name']
                     if file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == False and checks.check_if_on_the_list(file_name) == True:
                         if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL':
 
                             # Find the keyword of the torrent_name entered by the user in anime_list.txt to get its season number
-                            anime_keyword = checks.find_anime_keyword(file_name)
+                            file_info = checks.get_anime_info(file_name)
 
                             # Setting up the encoding parameters (matches erai-raws's releases)
                             first_index_occurence = file_name.find(" - ")
@@ -236,16 +235,21 @@ while True:
                             anime_name = file_name[12:first_index_occurence]
                             episode_number = file_name[index_rank + 3:index_rank + 5]
                             destination_folder_name = anime_name.replace(" ", "-").lower()
-                            point_name = anime_name.replace(" ", ".")
                             input_file_name = file_name.replace(" ", "\ ")
-                            output_file_name = f'{point_name}.s{anime_list[anime_keyword]}e{episode_number}.{settings.suffix}.mp4'
+                            output_file_name = f'{file_info[2]}.s{file_info[1]}e{episode_number}.{settings.suffix}.mp4'
 
-                            os.system(f'mkdir -p {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}')
-                            print(f'\033[96mEncoding {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}\033[0m..')
-                            os.system(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name} -vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {settings.lang} --subtitle-burn')
-                            print("\033[92mDone !\033[0m")
+                            if settings.auto_encode == True:    # Encode the file
+                                os.system(f'mkdir -p {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}')
+                                print(f'\033[96mEncoding {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}\033[0m..')
+                                os.system(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name} {settings.handbrake_settings}')
+                                print(f'HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name} {settings.handbrake_settings}')
+                                print("\033[92mDone !\033[0m")
+                                encode = True
 
-                            encode = True
+                            else:   # Copying the file to the destination folder
+                                print(f'\033[96mCopying {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}..\033[0m')
+                                os.system(f'cp {settings.torrents_location}/{input_file_name} {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}')
+                                print("\033[92mDone !\033[0m")
 
                             proceed_list.append(file_name)
                             txt.write_list_to_txt("proceed_list.txt", proceed_list)
@@ -253,46 +257,12 @@ while True:
                             last_torrent_proceed = file_name
 
                             # Giving the file the right permissions
-                            os.system(f'sudo chown {settings.linuxuser} {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}')
-                            os.system(f'sudo chmod 775 {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}')
+                            os.system(f'sudo chown {settings.linuxuser} {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}')
+                            os.system(f'sudo chmod 775 {settings.target_directory}/animes/{destination_folder_name}/s{file_info[1]}/{output_file_name}')
 
-                        elif torrent['state'] == 'downloading':
+                        else:
                             print(f'\033[31mFile {file_name} is still downloading\033[0m')
-            
-            else:
 
-                for torrent in torrents_info:
-                    file_name = torrent['name']
-                    if file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == False and checks.check_if_on_the_list(file_name) == True:
-                        if torrent['state'] != 'downloading' or torrent['state'] != 'stalledDL':
-
-                            anime_keyword = checks.find_anime_keyword(file_name)
-
-                            first_index_occurence = file_name.find(" - ")
-                            index_rank = index.search_index(file_name)
-                            anime_name = file_name[12:first_index_occurence]
-                            episode_number = file_name[index_rank + 3:index_rank + 5]
-                            destination_folder_name = anime_name.replace(" ", "-").lower()
-                            point_name = anime_name.replace(" ", ".")
-                            input_file_name = file_name.replace(" ", "\ ")
-                            output_file_name = f'{point_name}.s{anime_list[anime_keyword]}e{episode_number}.{settings.suffix}.mkv'
-
-                            # Copying the file to the destination folder
-                            print(f'\033[96mCopying {file_name} to {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}..\033[0m')
-                            os.system(f'cp {settings.torrents_location}/{input_file_name} {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}')
-                            print("\033[92mDone !\033[0m")
-
-                            proceed_list.append(file_name)
-                            txt.write_list_to_txt("proceed_list.txt", proceed_list)
-
-                            last_torrent_proceed = file_name
-
-                            # Giving the file the right permissions
-                            os.system(f'sudo chown {settings.linuxuser} {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}')
-                            os.system(f'sudo chmod 775 {settings.target_directory}/animes/{destination_folder_name}/s{anime_list[anime_keyword]}/{output_file_name}')
-
-                        elif torrent['state'] == 'downloading':
-                                print(f'\033[31mFile {file_name} is still downloading\033[0m')
 
         if request_count != 1 and settings.delete_torrents_afterwards == True:
             torrents.clean_torrents()
