@@ -1,6 +1,6 @@
-Spy, 1, Spy.x.Family
-Kakkou, 1, Kakkou.no.Iinazuke
-Kaguya-sama, 3, Kagyua-sama.wa.Kokurasetai
-Otomege, 1, Otomege.Sekai.wa.Mob.ni.Kibishii.Sekai.Desu
-Aharen-san, 1, Aharen-san.wa.Hakarenai
-Tomodachi, 1, Tomodachi.Game
+Spy, 1, Spy x Family
+Kakkou, 1, Kakkou no Iinazuke
+Kaguya-sama, 3, Kagyua-sama wa Kokurasetai
+Otomege, 1, Otomege Sekai wa Mob ni Kibishii Sekai Desu
+Aharen-san, 1, Aharen-san wa Hakarenai
+Tomodachi, 1, Tomodachi Game
