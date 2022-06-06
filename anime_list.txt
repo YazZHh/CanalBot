@@ -4,3 +4,4 @@ Kaguya-sama, 3, Kagyua-sama wa Kokurasetai
 Otomege, 1, Otomege Sekai wa Mob ni Kibishii Sekai Desu
 Aharen-san, 1, Aharen-san wa Hakarenai
 Tomodachi, 1, Tomodachi Game
+Date, 4, Date A Live

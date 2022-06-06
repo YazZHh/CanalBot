@@ -69,14 +69,16 @@ class checks:
     def check_if_on_the_list(torrent):
         check = False
         for i in anime_list:
-            if i != "":
+            if i != ['']:
                 if torrent.find(i[0]) != -1:
                     check = True
         return check
 
     def get_anime_info(torrent_name):
+        print(torrent_name)
         for i in anime_list:
-            if i != "":
+            print(i)
+            if i != ['']:
                 if torrent_name.find(i[0]) != -1:
                     return i[0], i[1], i[2]
         return None
