@@ -21,6 +21,7 @@ apt-get update && apt-get upgrade
 
 ## What does this script do ?
 It will check for new episodes in the RSS every 7 minutes and if it finds one, it will download and encode the episode to the selected location
+
 (exactly 7 minutes to avoid getting tempban from DNS servers or Nyaa, you can choose between encoding or copying the file)
 
 **This script was intended to work with Erai-raws's torrents, giving the script another RSS feed will break the script.**
@@ -37,8 +38,8 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 - Start qBitrorrent Web UI if it wasn't already (with command `qbittorrent-nox -d`)
 - Download the file `CanalBot.py` into a direcroty
 - Create a file named `proceed_list.txt`, it will store the name of which files have already been encoded, no need to fill this file.
-- Create another file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, season_number, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)*
-- Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings, *see [Settings](#settings)*
+- Create another file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, season_number, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` can be set to whatever name you want
+- Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings, *see [Settings](#settings- ) below*
 - Now run the script in a screen (linux package) on your linux server to avoid linux killing the process, and that's it.
 - If the script crashes, just restart it, it won't re-add episodes, or re-encode episode.
 
@@ -54,7 +55,7 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 * `linuxuser` specify which linux user shoud own the files
 * `user` is the user of the qBittorrent Web UI
 * `password` is the password of the qBittorrent Web UI
-* `qb` set the link to the qBittorrent Web UI
+* `webui_link` set the link to the qBittorrent Web UI
 
 ## Customisation
 - You can custom the encoding command if you want, *see [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*
