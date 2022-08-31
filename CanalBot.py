@@ -11,16 +11,16 @@ class settings:
     delete_torrents_afterwards = False                      # Delete torrents after they are no longer in the RSS search results
     auto_encode = True                                      # Set to True if you want to automatically encode the torrents
     lang = "english"                                        # Language you want the subtitles to be
-    suffix = "suffix"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
+    suffix = "suffix"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4
     quality = "1080p"                                       # Video quality of the torrents
     handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
     target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
     torrents_location = "/animes/torrent/directory"         # Episodes files should be in this directory, please configure your qBittorrent Web UI
-    linuxuser = "user"                                      # Linux user who will get the acces rights to the files
+    linuxuser = "user"                                      # Linux user who will own the file (read access will be given to every user)
     user = "admin"                                          # Username of your qBittorrent Web UI
     password = "adminadmin"                                 # Password for the Web ui
-    webui_link = "http://localhost:8080"                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
-    rss_link = "https://nyaa(.)si/?page=rss&u=Erai-raws"    # Just remove the "()" and run the script
+    qb = Client('http://localhost:8080')                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
+    rss_link = 'https://nyaa(.)si/?page=rss&u=Erai-raws'    # Just remove the "()" and run the script
 
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
@@ -31,7 +31,7 @@ start_time = time.time()
 crash = False
 fail_count = 0
 
-print("\033[1;96mCanalBot v0.5-beta2\033[0m")
+print("\033[1;96mCanalBot v0.5\033[0m")
 
 class index:
     def index_verify(file_name, index):
@@ -44,7 +44,7 @@ class index:
     def find_index(file_name, index, number):
         start = file_name.find(index)
         while start >= 0 and number > 1:
-            start = file_name.find(index, start + len(index))
+            start = file_name.find(index, start+len(index))
             number -= 1
         return start
 
@@ -123,8 +123,8 @@ class torrents:
                     torrent_file_name, hash = torrent['name'], torrent['hash']
                     if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(ep_number) != -1:# file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == True and checks.check_if_added(file_name) == True:
                         print(f'\033[1;91mDeleting "{torrent_file_name}"\033[0m')
-                        print(f"DELETE : qb.delete_permanently({hash})") # DEBUG
-                        # torrents.clean_torrent_list(torrent_file_name) # DEBUG
+                        qb.delete_permanently(hash)
+                        torrents.clean_torrent_list(torrent_file_name)
 
     def clean_torrent_list(torrent):
         temp = txt.read_txt_to_list("proceed_list.txt")
@@ -292,7 +292,7 @@ while True:     # Main infinite loop start
 
         if encode == False:
             print("Wating 7 minutes before the next request..")
-            time.sleep(420)     # Change this value (in seconds) to wait mor or less befor the next request
+            time.sleep(420)     # Change this value (in seconds) to wait more or less before the next request
         elif crash == True:
             print("Wating 30 seconds before the next request..")
             time.sleep(30)
