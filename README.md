@@ -50,7 +50,7 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 * `suffix` define the end of the file. Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, for French subtitles you could put "vostfr" for instance.
 * `quality` obviously the video quality of the episodes you want the script to download (you can choose between 1080p, 720p and 480p)
 * `handbrake_settings` are the settings that HandBrakeCLI will use when encoding the file
-* `target_directory` tells the script where does the episodes will be storen. Structure of the directory at the end : `target_directory/animes/anime-name/s1/episode.s1eXX.suffix.mp4`
+* `target_directory` tells the script where does the episodes will be storen. Structure of the directory at the end : `target_directory/animes/anime_fodler_name/s(season_number)/anime_name.s1eXX.suffix.mp4`, `anime_name` will be formatted in lower case and spaces will be replaced by "-".
 * `torrents_location` define on which directory torrents are downloaded
 * `linuxuser` specify which linux user shoud own the files
 * `user` is the user of the qBittorrent Web UI
@@ -58,5 +58,5 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 * `webui_link` set the link to the qBittorrent Web UI
 
 ## Customisation
-- You can custom the encoding command if you want, *see [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*
+- You can customise the encoding command if you want, *see [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*
 - You can stop the script at any moment py pressing <kbd>CTRL</kbd> + <kbd>C</kbd>, otherwise it will run infinitely
