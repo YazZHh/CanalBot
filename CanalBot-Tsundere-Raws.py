@@ -20,7 +20,7 @@ class settings:
     user = "admin"                                          # Username of your qBittorrent Web UI
     password = "adminadmin"                                 # Password for the Web ui
     webui_link = "http://localhost:8080"                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
-    rss_link = "https://nyaa(.)si/?page=rss&u=Erai-raws"    # Just remove the "()" and run the script
+    rss_link = "https://nyaa(.)si/?page=rss&u=Tsundere-Raws"    # Just remove the "()" and run the script
 
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
