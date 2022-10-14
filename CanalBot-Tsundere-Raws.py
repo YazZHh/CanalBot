@@ -1,9 +1,7 @@
 import feedparser
 from threading import Thread, Event
 from qbittorrent import Client
-import os
-import time
-import requests
+import os, sys, time, requests
 
 # Please change the following variables to your own settings
 
@@ -124,6 +122,7 @@ def check_if_added(index, keyword, ep_number):
 
 def rss_search(keyword, quality):
     entries = source_rss.entries
+    found = False
     entry_number = -1                                                                                           # -1 to start at the first result (because even before searching, we add 1 to entry_number)
     for entry in entries:
         entry_number += 1
@@ -137,12 +136,11 @@ def rss_search(keyword, quality):
                         qb.download_from_link(entries[entry_number].link)
                         rss_search_results.append(entries[entry_number].title)
                         print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
-                        break
                     else:
                         print(f'\033[90mTorrent "{torrent_name}" have already been added..\033[0m')
                         rss_search_results.append(source_rss.entries[entry_number].title)
-                        break
-    if entry.title.find(keyword) == -1:
+                    found = True
+    if found == False:
         not_found.append(keyword)
 
 def clean_torrents():
@@ -150,12 +148,12 @@ def clean_torrents():
     if len(delete_list) == 0:
         print("\033[90mNo torrent to delete\033[0m")
     else:
-        for anime_ep in delete_list:
-            torrent_index = search_index(anime_ep)
-            anime_name, ep_number = anime_ep[12:torrent_index], anime_ep[torrent_index + 2:torrent_index + 6]
+        for anime_torrent in delete_list:
+            torrent_index = search_index(anime_torrent)
+            anime_name, ep_number = anime_torrent[anime_torrent.find("]") + 2:torrent_index], anime_torrent[torrent_index + 2:torrent_index + 6]
             for torrent in torrents_info:
                 torrent_file_name, hash = torrent['name'], torrent['hash']
-                if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(ep_number) != -1:# file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == True and checks.check_if_added(file_name) == True:
+                if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(ep_number) != -1:        # file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == True and checks.check_if_added(file_name) == True:
                     print(f'\033[1;91mDeleting "{torrent_file_name}"\033[0m')
                     qb.delete_permanently(hash)
                     processed_list.clean_torrent_list(torrent_file_name)
@@ -192,8 +190,9 @@ def time_calculation(time_in_seconds):
     days = time_in_seconds // 86400
     hours = (time_in_seconds - (86400 * days)) // 3600
     minutes = (time_in_seconds - (86400 * days) - (3600 * hours)) // 60
+    seconds = time_in_seconds - (86400 * days) - (3600 * hours) - (60 * minutes)
     if days == 0 and hours == 0:
-        return f'{minutes} min'
+        return f'{minutes} min {seconds} sec'
     elif days == 0:
         return f'{hours}h {minutes}min'
     else:
@@ -274,7 +273,7 @@ if __name__ == "__main__":
                                 point_name = anime_name.replace(" ", ".")
                                 output_file_name = f"{point_name}.s{file_info[2]}e{episode_number}.{settings.suffix}"
 
-                                if settings.auto_encode == True:    # Encoding the file
+                                if settings.auto_encode == True:    # Encode the file
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}")    # Create a folder for the output file, if wasn't already
                                     if os.path.exists(f"{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}"):
                                         print(f"\033[35mSkipping encoding for {file_name} : output file already exists\033[0m")
@@ -314,11 +313,20 @@ if __name__ == "__main__":
 
             if encode == False:
                 print("Wating 7 minutes before the next request..")
-                time.sleep(420)     # Change this value (in seconds) to wait more or less before the next request
+                timer = 420                                             # Change this value (in seconds) to wait more or less before the next request
+                for remaining_seconds in range(timer):
+                    sys.stdout.write(f"\033[90mTime remaining : {time_calculation(timer - remaining_seconds)}\033[0m")
+                    sys.stdout.write("\r")
+                    sys.stdout.flush()
+                    time.sleep(1)
+                sys.stdout.write("\r                                   ")
+                sys.stdout.flush()
+
             elif crash == True:
                 print("Wating 30 seconds before the next request..")
                 time.sleep(30)
                 qb_request()
+
             else:
                 qb_request()
 
