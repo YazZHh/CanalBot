@@ -192,6 +192,8 @@ def time_calculation(time_in_seconds):
     minutes = (time_in_seconds - (86400 * days) - (3600 * hours)) // 60
     seconds = time_in_seconds - (86400 * days) - (3600 * hours) - (60 * minutes)
     if days == 0 and hours == 0:
+        if seconds < 10:
+            seconds = f"0{seconds}"
         return f'{minutes} min {seconds} sec'
     elif days == 0:
         return f'{hours}h {minutes}min'
