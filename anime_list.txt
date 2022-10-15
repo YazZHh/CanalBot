@@ -1,10 +1,8 @@
-Kakkou, a-couple-of-cuckoos, 1, Kakkou no Iinazuke
-Kanojo, rent-a-girlfriend, 2, Kanojo Okarishimasu
-Youkoso, classroom-of-the-elite, 2, Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e
-Lycoris, lycoris-recoil, 1, Lycoris Recoil
-Engage, engage-kiss, 1, Engage Kiss
-Hataraku, the-devil-is-a-part-timer, 2, Hataraku Maou-sama
-Mamahaha, my-stepmoms-daughter-is-my-ex, 1, Mamahaha no Tsurego ga Motokano datta
-Kumichou, the-yakusas-guide-to-babysitting, 1, Kumichou Musume to Sewagakari
-Yakkyoku, parallel-world-pharmacy, 1, Isekai Yakkyoku
-Saikin, the-maid-i-hired-recently-is-mysterious, 1, Saikin Yatotta Maid ga Ayashii
+SPY, spy-x-family, 1, Spy x Family
+Beast, beast-tamer, 1, Yuusha Party wo Tsuihou Sareta Beast Tamer Saikyoushu no Nekomimi Shoujo to Deau
+Akuyaku, im-the-villainess-so-im-taming-the-final-boss, 1, Akuyaku Reijou Nano de Last Boss wo Katte Mimashita
+Fuufu, more-than-a-married-couple-but-not-lovers, 1, Fuufu Ijou Koibito Miman
+Chainsaw, chainsaw-man, 1, Chainsaw Man
+Shitara, reincarnated-as-a-sword, 1, Tensei Shitara Ken Deshita
+Renai, love-flops, 1, Renai Flops
+Yatsura, urusei-yatsura, 1, Urusei Yatsura
