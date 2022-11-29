@@ -7,9 +7,9 @@ import os, sys, time, requests
 
 class settings:
     delete_torrents_afterwards = False                      # Delete torrents after they are no longer in the RSS search results
-    auto_encode = True                                      # Set to True if you want to automatically encode the torrents
-    lang = "english"                                        # Language you want the subtitles to be
-    suffix = "suffix"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
+    auto_encode = True                                      # Set to True if you want to automatically encode the torrents (otherwise it'll just copy the file to the targer directory)
+    lang = "french"                                         # Language you want the subtitles to be
+    suffix = "vostfr"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
     quality = "1080p"                                       # Video quality of the torrents
     handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
     target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
@@ -18,7 +18,7 @@ class settings:
     user = "admin"                                          # Username of your qBittorrent Web UI
     password = "adminadmin"                                 # Password for the Web ui
     webui_link = "http://localhost:8080"                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
-    rss_link = 'https://nyaa(.)si/?page=rss&u=Tsundere-Raws'# Just remove the "()" and run the script
+    rss_link = "https://nyaa.si/?page=rss&u=Tsundere-Raws"  # Just remove the "()" and run the script
 
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
@@ -29,7 +29,7 @@ start_time = time.time()
 crash = False
 fail_count = 0
 
-print("\033[1;96mCanalBot v0.5.1\033[0m")
+print("\033[1;96mCanalBot v0.6.1\033[0m")
 
 class txt:
 
@@ -76,7 +76,7 @@ class txt:
         list = '\n'.join(self.data)
         temp = open(self.file_name, "w")
         temp.write(list)
-    
+
     def clean_torrent_list(self, file_name):
         nb = 0
         for torrent in self.data:
@@ -94,7 +94,7 @@ class txt:
 
 def index_verify(file_name, index):                                     # Theses three following index_things functions work together and return the position of the index of the file (Here used to search " - ")
     try:                                                                # It finds the first occurence of the index, then verify it by trying to int() the two next characters (the two next characters being the episode number)
-        int(file_name[index + 3:index + 5])
+        int(file_name[index + 1:index + 3])
         return True
     except ValueError:
         return False
@@ -108,15 +108,15 @@ def find_index(file_name, index, number):
 
 def search_index(file_name):
     for i in range(1, 5):
-        if index_verify(file_name, find_index(file_name, " - ", i)):
-            return find_index(file_name, " - ", i)
+        if index_verify(file_name, find_index(file_name, "S", i)):
+            return find_index(file_name, "S", i)
 
 def check_if_added(index, keyword, ep_number):
         check = False
         for torrent in qb.torrents():
-            torrent_name = torrent['name'] 
+            torrent_name = torrent['name']
             if torrent_name.find(keyword) != -1:
-                if torrent_name[index + 3:index + 5] == ep_number:
+                if torrent_name[index + 4:index + 6] == ep_number:
                     check = True
         return check
 
@@ -127,17 +127,20 @@ def rss_search(keyword, quality):
     for entry in entries:
         entry_number += 1
         if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword
-            torrent_name = entries[entry_number].title
-            if entries[entry_number].title.find(quality) != -1:                                                 # Then search for the right quality
-                rss_torrent_title = entries[entry_number].title
-                if rss_torrent_title.find('.mkv') != -1 and rss_torrent_title.find('VOSTFR') != -1:             # "if rss_torrent_title.find("HEVC") == -1 and rss_torrent_title.find("Multiple Subtitle") != -1:" : Get rid of the shitty Erai-Raws's HEVC and ENG subs only torrents.
-                    torrent_index = search_index(rss_torrent_title)
-                    if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 3:torrent_index + 5]) == False:
+            rss_torrent_title = entries[entry_number].title
+            if rss_torrent_title.find(quality) != -1 and rss_torrent_title.find('VOSTFR') != -1:                                                 # Then search for the right quality
+                torrent_index = search_index(rss_torrent_title)
+                # print("rss_torrent_title :", rss_torrent_title)
+                # print("torrent_index :", torrent_index)
+                # print("keyword :", keyword)
+                #print(f'check_if_added("{torrent_index}", "{keyword}", "{rss_torrent_title[torrent_index + 4:torrent_index + 6]}")')
+                if torrent_index != None :
+                    if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 4:torrent_index + 6]) == False:
                         qb.download_from_link(entries[entry_number].link)
                         rss_search_results.append(entries[entry_number].title)
                         print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
                     else:
-                        print(f'\033[90mTorrent "{torrent_name}" have already been added..\033[0m')
+                        print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
                         rss_search_results.append(source_rss.entries[entry_number].title)
                     found = True
     if found == False:
@@ -150,12 +153,15 @@ def clean_torrents():
     else:
         for anime_torrent in delete_list:
             torrent_index = search_index(anime_torrent)
-            anime_name, ep_number = anime_torrent[anime_torrent.find("]") + 2:torrent_index], anime_torrent[torrent_index + 2:torrent_index + 6]
+            anime_name, ep_number = anime_torrent[0:torrent_index - 1], anime_torrent[torrent_index + 2:torrent_index + 6]
+            print("anime_name :", anime_name)   # DEBUG
+            print("ep_number :", ep_number)     # DEBUG
             for torrent in torrents_info:
                 torrent_file_name, hash = torrent['name'], torrent['hash']
-                if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(ep_number) != -1:        # file_name[0:11] == "[Erai-raws]" and checks.check_if_processed(file_name) == True and checks.check_if_added(file_name) == True:
-                    print(f'\033[1;91mDeleting "{torrent_file_name}"\033[0m')
-                    qb.delete_permanently(hash)
+                if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(ep_number) != -1:
+                    print("torrent_file_name :", torrent_file_name)
+                    print(f'\033[1;91mDeleting "{torrent_file_name}"\n\033[0m')
+                    # qb.delete_permanently(hash)
                     processed_list.clean_torrent_list(torrent_file_name)
 
 def rss_request():
@@ -171,7 +177,7 @@ def rss_request():
             return feed
         except:
             print("\033[1;91mError while retrieving RSS feed, next try in 10 seconds\033[0m")
-            time.sleep(10)
+            wait(10)
 
 def qb_request():
     print("\n\033[93mConnection Request to qBittorrent WebUI\033[0m")
@@ -184,7 +190,9 @@ def qb_request():
             success, crash = True, False
         except:
             print("\033[1;91mError while connecting to qBittorrent Web UI, next try in 5 minutes.\033[0m")
-            time.sleep(300)
+            crash = True
+            wait(300)
+
 
 def time_calculation(time_in_seconds):
     days = time_in_seconds // 86400
@@ -200,6 +208,15 @@ def time_calculation(time_in_seconds):
     else:
         return f'{days}d {hours}h {minutes}min'
 
+def wait(seconds):
+    for remaining_seconds in range(seconds):
+        sys.stdout.write(f"\033[90mTime remaining : {time_calculation(seconds - remaining_seconds)}\033[0m                                                   ")
+        sys.stdout.write("\r")
+        sys.stdout.flush()
+        time.sleep(1)
+    sys.stdout.write("\r                                                   \r")
+    sys.stdout.flush()
+
 def search_for_new_torrents():
     global crash
     crash = False
@@ -208,9 +225,9 @@ def search_for_new_torrents():
             if keyword != "":
                 rss_search(keyword, settings.quality)
     except:
+        crash = True
         # print("\033[1;91mError while searching for new torrents / Error while retrieving Torrents info from the qBittorrent Web UI\033[0m")
         # Line above commented because the error can appears when no crash has happen (likely because the request() function takes a bit of time to execute sometimes)
-        crash = True
 
 def timeout_search():   # I need to get rid of this function
     stop_event = Event()
@@ -232,7 +249,7 @@ if __name__ == "__main__":
             qb_request()
 
         source_rss = rss_request()
-            
+
         if len(source_rss) == 7:          # did some tests, and lenght = 7 if RSS request success
             request_count += 1
             not_found = []
@@ -266,16 +283,15 @@ if __name__ == "__main__":
                         file_name = torrent['name']
                         if file_name.find(settings.rss_link[28:-1]) != -1 and not processed_list.check_if_processed(file_name) and anime_list.check_if_on_the_list(file_name):
                             if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL':
-
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
                                 anime_name = file_info[3]
                                 index_rank = search_index(file_name)
-                                episode_number = file_name[index_rank + 3:index_rank + 5]
-                                input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)")    # Small changes needed in order to match the syntax of a file name in a linux command 
+                                episode_number = file_name[index_rank + 4:index_rank + 6]
+                                input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to match the syntax of a file name in a linux command 
                                 point_name = anime_name.replace(" ", ".")
                                 output_file_name = f"{point_name}.s{file_info[2]}e{episode_number}.{settings.suffix}"
 
-                                if settings.auto_encode == True:    # Encode the file
+                                if settings.auto_encode == True:    # Encoding the file
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}")    # Create a folder for the output file, if wasn't already
                                     if os.path.exists(f"{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}"):
                                         print(f"\033[35mSkipping encoding for {file_name} : output file already exists\033[0m")
@@ -315,18 +331,11 @@ if __name__ == "__main__":
 
             if encode == False:
                 print("Wating 7 minutes before the next request..")
-                timer = 420                                             # Change this value (in seconds) to wait more or less before the next request
-                for remaining_seconds in range(timer):
-                    sys.stdout.write(f"\033[90mTime remaining : {time_calculation(timer - remaining_seconds)}\033[0m")
-                    sys.stdout.write("\r")
-                    sys.stdout.flush()
-                    time.sleep(1)
-                sys.stdout.write("\r                                   ")
-                sys.stdout.flush()
+                wait(420)   # Change this value (in seconds) to wait more or less before the next request
 
             elif crash == True:
                 print("Wating 30 seconds before the next request..")
-                time.sleep(30)
+                wait(30)
                 qb_request()
 
             else:
@@ -334,4 +343,4 @@ if __name__ == "__main__":
 
         elif len(source_rss) == 5:
             print("RSS request failed, next try in 5 seconds..")
-            time.sleep(5)
+            wait(5)
