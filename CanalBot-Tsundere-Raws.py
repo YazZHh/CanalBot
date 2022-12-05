@@ -18,7 +18,7 @@ class settings:
     user = "admin"                                          # Username of your qBittorrent Web UI
     password = "adminadmin"                                 # Password for the Web ui
     webui_link = "http://localhost:8080"                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
-    rss_link = "https://nyaa.si/?page=rss&u=Tsundere-Raws"  # Just remove the "()" and run the script
+    rss_link = "https://nyaa(.)si/?page=rss&u=Tsundere-Raws"# Just remove the "()" and run the script
 
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
@@ -111,6 +111,11 @@ def search_index(file_name):
         if index_verify(file_name, find_index(file_name, "S", i)):
             return find_index(file_name, "S", i)
 
+def get_ep_number(torrent_name):
+    index = search_index(torrent_name)
+    index2 = torrent_name.find("VOSTFR")
+    return torrent_name[index + 4:index2 - 1]
+
 def check_if_added(index, keyword, ep_number):
         check = False
         for torrent in qb.torrents():
@@ -130,10 +135,6 @@ def rss_search(keyword, quality):
             rss_torrent_title = entries[entry_number].title
             if rss_torrent_title.find(quality) != -1 and rss_torrent_title.find('VOSTFR') != -1:                                                 # Then search for the right quality
                 torrent_index = search_index(rss_torrent_title)
-                # print("rss_torrent_title :", rss_torrent_title)
-                # print("torrent_index :", torrent_index)
-                # print("keyword :", keyword)
-                #print(f'check_if_added("{torrent_index}", "{keyword}", "{rss_torrent_title[torrent_index + 4:torrent_index + 6]}")')
                 if torrent_index != None :
                     if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 4:torrent_index + 6]) == False:
                         qb.download_from_link(entries[entry_number].link)
@@ -141,7 +142,7 @@ def rss_search(keyword, quality):
                         print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
                     else:
                         print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
-                        rss_search_results.append(source_rss.entries[entry_number].title)
+                        rss_search_results.append(entries[entry_number].title)
                     found = True
     if found == False:
         not_found.append(keyword)
@@ -153,15 +154,17 @@ def clean_torrents():
     else:
         for anime_torrent in delete_list:
             torrent_index = search_index(anime_torrent)
-            anime_name, ep_number = anime_torrent[0:torrent_index - 1], anime_torrent[torrent_index + 2:torrent_index + 6]
-            print("anime_name :", anime_name)   # DEBUG
-            print("ep_number :", ep_number)     # DEBUG
+            anime_name = anime_torrent[0:torrent_index - 1]
+            ep_number = get_ep_number(anime_torrent)  # anime_torrent[torrent_index + 2:torrent_index + 6]
+            # print(f'anime_name : "{anime_name}"')   # DEBUG
+            # print(f'ep_number : "{ep_number}"')     # DEBUG
             for torrent in torrents_info:
-                torrent_file_name, hash = torrent['name'], torrent['hash']
-                if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(ep_number) != -1:
-                    print("torrent_file_name :", torrent_file_name)
-                    print(f'\033[1;91mDeleting "{torrent_file_name}"\n\033[0m')
-                    # qb.delete_permanently(hash)
+                torrent_file_name, torrent_id = torrent['name'], torrent['hash']
+                if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(f"E{ep_number}") != -1:
+                    # print("torrent_file_name :", torrent_file_name) # DEBUG
+                    # print(f'qb.delete_permanently({torrent_id})')   # DEBUG
+                    print(f'\033[1;91mDeleting "{torrent_file_name}"\033[0m')
+                    qb.delete_permanently(torrent_id)
                     processed_list.clean_torrent_list(torrent_file_name)
 
 def rss_request():
@@ -189,10 +192,9 @@ def qb_request():
             print("\033[1;92mConnection to qBittorrent WebUI successfully established\033[0m")
             success, crash = True, False
         except:
-            print("\033[1;91mError while connecting to qBittorrent Web UI, next try in 5 minutes.\033[0m")
+            print("\033[1;91mError while connecting to qBittorrent Web UI, next try in 3 minutes.\033[0m")
             crash = True
-            wait(300)
-
+            wait(180)
 
 def time_calculation(time_in_seconds):
     days = time_in_seconds // 86400
@@ -285,9 +287,8 @@ if __name__ == "__main__":
                             if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL':
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
                                 anime_name = file_info[3]
-                                index_rank = search_index(file_name)
-                                episode_number = file_name[index_rank + 4:index_rank + 6]
-                                input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to match the syntax of a file name in a linux command 
+                                episode_number = get_ep_number(file_name)
+                                input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
                                 point_name = anime_name.replace(" ", ".")
                                 output_file_name = f"{point_name}.s{file_info[2]}e{episode_number}.{settings.suffix}"
 
@@ -331,7 +332,7 @@ if __name__ == "__main__":
 
             if encode == False:
                 print("Wating 7 minutes before the next request..")
-                wait(420)   # Change this value (in seconds) to wait more or less before the next request
+                wait(420)   # Change this value (in seconds) to wait more or less before the next request (default 420s, 7mn to avoid getting tempban from nyaa)
 
             elif crash == True:
                 print("Wating 30 seconds before the next request..")
