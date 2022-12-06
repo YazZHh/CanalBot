@@ -28,6 +28,7 @@ qb = Client(settings.webui_link)
 start_time = time.time()
 crash = False
 fail_count = 0
+new_torrent_found = 0
 
 print("\033[1;96mCanalBot v0.6.1\033[0m")
 
@@ -126,6 +127,7 @@ def check_if_added(index, keyword, ep_number):
         return check
 
 def rss_search(keyword, quality):
+    global new_torrent_found
     entries = source_rss.entries
     found = False
     entry_number = -1                                                                                           # -1 to start at the first result (because even before searching, we add 1 to entry_number)
@@ -140,6 +142,7 @@ def rss_search(keyword, quality):
                         qb.download_from_link(entries[entry_number].link)
                         rss_search_results.append(entries[entry_number].title)
                         print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
+                        new_torrent_found += 1
                     else:
                         print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
                         rss_search_results.append(entries[entry_number].title)
@@ -192,7 +195,7 @@ def qb_request():
             print("\033[1;92mConnection to qBittorrent WebUI successfully established\033[0m")
             success, crash = True, False
         except:
-            print("\033[1;91mError while connecting to qBittorrent Web UI, next try in 3 minutes.\033[0m")
+            print("\033[1;91mError while connecting to qBittorrent Web UI, next try in 3 minutes...\033[0m")
             crash = True
             wait(180)
 
@@ -262,7 +265,7 @@ if __name__ == "__main__":
                 rss_search_results = []
 
             print("\033[1mLast torrent added in the RSS feed\033[0m :", source_rss.entries[0].title)
-            timeout_search()
+            timeout_search() 
 
             if crash == False:
                 not_found_list = ', '.join(not_found)
@@ -321,6 +324,8 @@ if __name__ == "__main__":
                                 else:
                                     os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
+                                
+                                new_torrent_found -= 1
 
                             else:
                                 print(f"\033[31mFile {file_name} is still downloading !\033[0m")
@@ -331,11 +336,15 @@ if __name__ == "__main__":
             print(f"\n\033[4m{request_count} requests made\033[0m")
 
             if encode == False:
-                print("Wating 7 minutes before the next request..")
-                wait(420)   # Change this value (in seconds) to wait more or less before the next request (default 420s, 7mn to avoid getting tempban from nyaa)
+                if new_torrent_found > 0:
+                    print("Wating 2 minutes before the next request...")
+                    wait(120)
+                else:
+                    print("Wating 7 minutes before the next request...")
+                    wait(420)   # Change this value (in seconds) to wait more or less before the next request (default 420s, 7mn to avoid getting tempban from nyaa)
 
             elif crash == True:
-                print("Wating 30 seconds before the next request..")
+                print("Wating 30 seconds before the next request...")
                 wait(30)
                 qb_request()
 
@@ -343,5 +352,5 @@ if __name__ == "__main__":
                 qb_request()
 
         elif len(source_rss) == 5:
-            print("RSS request failed, next try in 5 seconds..")
+            print("RSS request failed, next try in 5 seconds...")
             wait(5)
