@@ -1,5 +1,5 @@
 # CanalBot
-A small Python script ~~not the best written~~ made to automate the addition of weekly anime episodes on my server, with the help of Erai-raws's RSS page on Nyaa.
+A small Python script ~~not the best written~~ made to automate the addition of weekly anime episodes on my server, with the help of Tsundere-Raws RSS page on Nyaa.
 Originally made to work on a **linux** server, with [JellyFin](https://github.com/jellyfin/jellyfin), Plex or other Streaming service
 
 ## Requirements :
@@ -21,10 +21,9 @@ apt-get update && apt-get upgrade
 
 ## What does this script do ?
 It will check for new episodes in the RSS every 7 minutes and if it finds one, it will download and encode the episode to the selected location
+##### (exactly 7 minutes to avoid getting tempban from DNS servers or Nyaa, you can choose between encoding or copying the file)
 
-(exactly 7 minutes to avoid getting tempban from DNS servers or Nyaa, you can choose between encoding or copying the file)
-
-**This script was intended to work with Erai-raws's torrents, giving the script another RSS feed will break the script.**
+**This script was intended to work with Tsudnere-Raws torrents, giving the script another RSS feed will break the script.**
 
 Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)*
 - Bitrate : 2500kbps x264
