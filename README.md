@@ -46,7 +46,7 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 * `auto_encode` do what its name does : if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location
 * `lang` is used to choose the language of subtitles that will be burned in the video (you can leave it blank if you have set `auto_encode` to False)
 * `suffix` define the end of the file. Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, for French subtitles you could put "vostfr" for instance.
-* `quality` obviously the video quality of the episodes you want the script to download (you can choose between 1080p, 720p and 480p)
+* `quality` obviously the video quality of the episodes you want the script to download (you can choose between 1080p and 720p)
 * `handbrake_settings` are the settings that HandBrakeCLI will use when encoding the file
 * `target_directory` tells the script where does the episodes will be storen. Structure of the directory at the end : `target_directory/animes/anime_fodler_name/s(season_number)/anime_name.s1eXX.suffix.mp4`, `anime_name` will be formatted in lower case and spaces will be replaced by "-".
 * `torrents_location` define on which directory torrents are downloaded
