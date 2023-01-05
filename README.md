@@ -36,7 +36,8 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 - Install all dependencies
 - Start qBitrorrent Web UI if it wasn't already (with command `qbittorrent-nox -d`)
 - Download the file `CanalBot.py` into a direcroty
-- Create a file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, season_number, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` can be set to whatever name you want
+- Create a file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, season_number, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` can be set to whatever name you want)
+  - ⚠️ For the keyword, be sure to use a keyword that will work for both the torrent name on nyaa and the video file name itself
 - Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings, *see [Settings](#settings- ) below*
 - Now run the script in a screen (linux package) on your linux server to avoid linux killing the process, and that's it.
 - If the script crashes, just restart it, it won't re-add episodes, or re-encode episode.
