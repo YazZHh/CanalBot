@@ -6,19 +6,20 @@ import os, sys, time, requests
 # Please change the following variables to your own settings
 
 class settings:
-    delete_torrents_afterwards = False                      # Delete torrents after they are no longer in the RSS search results
-    auto_encode = True                                      # Set to True if you want to automatically encode the torrents (otherwise it'll just copy the file to the targer directory)
-    lang = "french"                                         # Language you want the subtitles to be
-    suffix = "vostfr"                                       # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
-    quality = "1080p"                                       # Video quality of the torrents
+    delete_torrents_afterwards = False                        # Delete torrents after they are no longer in the RSS search results
+    auto_encode = True                                        # Set to True if you want to automatically encode the torrents (otherwise it'll just copy the file to the targer directory)
+    lang = "french"                                           # Language you want the subtitles to be
+    extract_subtitles = False                                 # Extract (french) subs to animes/anime-name/s1/subtitles/anime.name.s1e01.ass
+    suffix = "vostfr"                                         # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
+    quality = "1080p"                                         # Video quality of the torrents
     handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
-    target_directory = "/animes/output/directory"           # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
-    torrents_location = "/animes/torrent/directory"         # Episodes files should be in this directory, please configure your qBittorrent Web UI
-    linuxuser = "user"                                      # Linux user who will get the acces rights to the files
-    user = "admin"                                          # Username of your qBittorrent Web UI
-    password = "adminadmin"                                 # Password for the Web ui
-    webui_link = "http://localhost:8080"                    # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
-    rss_link = "https://nyaa(.)si/?page=rss&u=Tsundere-Raws"# Just remove the "()" and run the script
+    target_directory = "/animes/output/directory"             # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
+    torrents_location = "/animes/torrent/directory"           # Episodes files should be in this directory, please configure your qBittorrent Web UI
+    linuxuser = "user"                                        # Linux user who will get the acces rights to the files
+    user = "admin"                                            # Username of your qBittorrent Web UI
+    password = "adminadmin"                                   # Password for the Web ui
+    webui_link = "http://localhost:8080"                      # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
+    rss_link = "https://nyaa(.)si/?page=rss&u=Tsundere-Raws"  # Just remove the "()" and run the script
 
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
@@ -28,9 +29,9 @@ qb = Client(settings.webui_link)
 start_time = time.time()
 crash = False
 fail_count = 0
-new_torrent_found = 0
+new_torrent_found_list = []
 
-print("\033[1;96mCanalBot v0.6.1\033[0m")
+print("\033[1;96mCanalBot v0.7.1\033[0m")
 
 class txt:
 
@@ -92,7 +93,6 @@ class txt:
                 return True
         return False
 
-
 def index_verify(file_name, index):                                     # Theses three following index_things functions work together and return the position of the index of the file (Here used to search " - ")
     try:                                                                # It finds the first occurence of the index, then verify it by trying to int() the two next characters (the two next characters being the episode number)
         int(file_name[index + 1:index + 3])
@@ -127,7 +127,7 @@ def check_if_added(index, keyword, ep_number):
         return check
 
 def rss_search(keyword, quality):
-    global new_torrent_found
+    global new_torrent_found_list
     entries = source_rss.entries
     found = False
     entry_number = -1                                                                                           # -1 to start at the first result (because even before searching, we add 1 to entry_number)
@@ -135,14 +135,17 @@ def rss_search(keyword, quality):
         entry_number += 1
         if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword
             rss_torrent_title = entries[entry_number].title
-            if rss_torrent_title.find(quality) != -1 and rss_torrent_title.find('VOSTFR') != -1:                                                 # Then search for the right quality
+            if rss_torrent_title.find(quality) != -1 and rss_torrent_title.find('VOSTFR') != -1:                # Then search for the right quality
                 torrent_index = search_index(rss_torrent_title)
                 if torrent_index != None :
                     if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 4:torrent_index + 6]) == False:
                         qb.download_from_link(entries[entry_number].link)
                         rss_search_results.append(entries[entry_number].title)
                         print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
-                        new_torrent_found += 1
+                        if keyword not in new_torrent_found_list:        # Only add if the keyword isn't already in new_torrent_list 
+                            new_torrent_found_list.append(keyword) 
+                        else:
+                            new_torrent_found_list
                     else:
                         print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
                         rss_search_results.append(entries[entry_number].title)
@@ -158,14 +161,10 @@ def clean_torrents():
         for anime_torrent in delete_list:
             torrent_index = search_index(anime_torrent)
             anime_name = anime_torrent[0:torrent_index - 1]
-            ep_number = get_ep_number(anime_torrent)  # anime_torrent[torrent_index + 2:torrent_index + 6]
-            # print(f'anime_name : "{anime_name}"')   # DEBUG
-            # print(f'ep_number : "{ep_number}"')     # DEBUG
+            ep_number = get_ep_number(anime_torrent)
             for torrent in torrents_info:
                 torrent_file_name, torrent_id = torrent['name'], torrent['hash']
                 if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(f"E{ep_number}") != -1:
-                    # print("torrent_file_name :", torrent_file_name) # DEBUG
-                    # print(f'qb.delete_permanently({torrent_id})')   # DEBUG
                     print(f'\033[1;91mDeleting "{torrent_file_name}"\033[0m')
                     qb.delete_permanently(torrent_id)
                     processed_list.clean_torrent_list(torrent_file_name)
@@ -265,7 +264,7 @@ if __name__ == "__main__":
                 rss_search_results = []
 
             print("\033[1mLast torrent added in the RSS feed\033[0m :", source_rss.entries[0].title)
-            timeout_search() 
+            timeout_search()
 
             if crash == False:
                 not_found_list = ', '.join(not_found)
@@ -292,8 +291,7 @@ if __name__ == "__main__":
                                 anime_name = file_info[3]
                                 episode_number = get_ep_number(file_name)
                                 input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
-                                point_name = anime_name.replace(" ", ".")
-                                output_file_name = f"{point_name}.s{file_info[2]}e{episode_number}.{settings.suffix}"
+                                output_file_name = f"{anime_name}.s{file_info[2]}e{episode_number}.{settings.suffix}".replace(" ", "-")      # Replace every space by a point to make sure there is no
 
                                 if settings.auto_encode == True:    # Encoding the file
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}")    # Create a folder for the output file, if wasn't already
@@ -324,19 +322,32 @@ if __name__ == "__main__":
                                 else:
                                     os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
-                                
-                                new_torrent_found -= 1
+
+                                if settings.extract_subtitles == True:
+                                    print("\033[0;35mExtracting french subtitles\033[0m")
+                                    os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/")
+                                    extract_command = f"mkvextract tracks {settings.torrents_location}/{input_file_name} 2:{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
+                                    os.system(extract_command)
+                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
+                                    os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")
+
+                                try:                                            # Removes the keyword from the new_torrent_list
+                                    new_torrent_found_list.remove(file_info[0])
+                                except:
+                                    pass
 
                             else:
-                                print(f"\033[31mFile {file_name} is still downloading !\033[0m")
+                                print(f'\033[31mFile "{file_name}" is still downloading !\033[0m')
 
             if request_count != 1 and settings.delete_torrents_afterwards == True:
                 clean_torrents()
 
             print(f"\n\033[4m{request_count} requests made\033[0m")
+            print("new_torrent_found_list =", new_torrent_found_list) # DEBUG 
 
             if encode == False:
-                if new_torrent_found > 0:
+                #if new... < 0:
+                if new_torrent_found_list > 0:
                     print("Wating 2 minutes before the next request...")
                     wait(120)
                 else:
