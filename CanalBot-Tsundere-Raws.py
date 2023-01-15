@@ -9,16 +9,16 @@ class settings:
     delete_torrents_afterwards = False                        # Delete torrents after they are no longer in the RSS search results
     auto_encode = True                                        # Set to True if you want to automatically encode the torrents (otherwise it'll just copy the file to the targer directory)
     lang = "french"                                           # Language you want the subtitles to be
-    extract_subtitles = False                                 # Extract (french) subs to animes/anime-name/s1/subtitles/anime.name.s1e01.ass
+    extract_subtitles = False                                 # Extract (french) subs to animes/anime-name/s1/subtitles/anime.name.s1e01.vostfr.ass
     suffix = "vostfr"                                         # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
     quality = "1080p"                                         # Video quality of the torrents
     handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
     target_directory = "/animes/output/directory"             # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
     torrents_location = "/animes/torrent/directory"           # Episodes files should be in this directory, please configure your qBittorrent Web UI
-    linuxuser = "user"                                        # Linux user who will get the acces rights to the files
+    linuxuser = "user"                                        # Linux user who will own and get the acces rights to the files (775 rights)
     user = "admin"                                            # Username of your qBittorrent Web UI
     password = "adminadmin"                                   # Password for the Web ui
-    webui_link = "http://localhost:8080"                      # Change "https://link-to-my-web.ui:PORT" to your actual web domain, please note that you can also use "http://localhost:8080" if you don't have a domain name
+    webui_link = "http://localhost:8080"                      # Change "http://localhost:8080" if necessary. Please note that you have to use your domain name if you have enabled https
     rss_link = "https://nyaa(.)si/?page=rss&u=Tsundere-Raws"  # Just remove the "()" and run the script
 
 request_count = 0                           # Do not modify the following lines
@@ -347,7 +347,7 @@ if __name__ == "__main__":
 
             if encode == False:
                 #if new... < 0:
-                if new_torrent_found_list > 0:
+                if len(new_torrent_found_list) > 0:
                     print("Wating 2 minutes before the next request...")
                     wait(120)
                 else:
