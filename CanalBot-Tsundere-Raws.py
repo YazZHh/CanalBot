@@ -142,8 +142,8 @@ def rss_search(keyword, quality):
                         qb.download_from_link(entries[entry_number].link)
                         rss_search_results.append(entries[entry_number].title)
                         print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
-                        if keyword not in new_torrent_found_list:        # Only add if the keyword isn't already in new_torrent_list 
-                            new_torrent_found_list.append(keyword) 
+                        if keyword not in new_torrent_found_list:                                               # Only add if the keyword isn't already in new_torrent_list
+                            new_torrent_found_list.append(keyword)
                         else:
                             new_torrent_found_list
                     else:
@@ -291,7 +291,7 @@ if __name__ == "__main__":
                                 anime_name = file_info[3]
                                 episode_number = get_ep_number(file_name)
                                 input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
-                                output_file_name = f"{anime_name}.s{file_info[2]}e{episode_number}.{settings.suffix}".replace(" ", "-")      # Replace every space by a point to make sure there is no
+                                output_file_name = f'{anime_name.replace(" ", ".")}.s{file_info[2]}e{episode_number}.{settings.suffix}'.replace(" ", "-")      # Replace every space by a point to make sure there is no
 
                                 if settings.auto_encode == True:    # Encoding the file
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}")    # Create a folder for the output file, if wasn't already
@@ -323,7 +323,7 @@ if __name__ == "__main__":
                                     os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
 
-                                if settings.extract_subtitles == True:
+                                if settings.extract_subtitles == True and not os.path.exists(f"{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}"):
                                     print("\033[0;35mExtracting french subtitles\033[0m")
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/")
                                     extract_command = f"mkvextract tracks {settings.torrents_location}/{input_file_name} 2:{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
@@ -343,7 +343,7 @@ if __name__ == "__main__":
                 clean_torrents()
 
             print(f"\n\033[4m{request_count} requests made\033[0m")
-            print("new_torrent_found_list =", new_torrent_found_list) # DEBUG 
+            print("new_torrent_found_list =", new_torrent_found_list) # DEBUG
 
             if encode == False:
                 #if new... < 0:
