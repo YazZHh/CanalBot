@@ -5,9 +5,9 @@ Iceblade, the-iceblade-sorcerer-shall-rule-the-world, 1, Hyouken no Majutsushi g
 Ars, giant-beasts-of-ars, 1, Ars no Kyojuu
 Angel, the-angel-nex-door-spoils-me-rotten, 1, Otonari no Tenshi-sama ni Itsunomanika Dame Ningen ni Sareteita Ken
 Nagatoro, dont-toy-with-me-miss-nagatoro, 2, Ijiranaide Nagatoro-san
-Retirement, saving-80-000-gold-in-anotjer-world-for-my-retirement, 1, Rougo ni Sonaete Isekai de 8-manmai no Kinka wo Tamemasu
+Retirement, saving-80-000-gold-in-another-world-for-my-retirement, 1, Rougo ni Sonaete Isekai de 8-manmai no Kinka wo Tamemasu
 Triangle, ayakashi-triangle, 1, Ayakashi Triangle
 BOFURI, bofuri, 2, Itai no wa Iya nano de Bougyoryoku ni Kyokufuri Shitai to Omoimasu
 Fruit, the-fruit-of-evolution-before-i-knew-it-my-life-had-it-made, 2, Shinka no Mi Shiranai Uchi ni Kachigumi Jinsei
 CUSTOM, onimai-im-now-your-sister, 1, Oniichan wa Oshimai!
-Exorcist, the-reincarnation-ot-the-strongest-exorcist-in-another-world, 1, Saikyou Onmyouji no Isekai Tenseiki
+Exorcist, the-reincarnation-of-the-strongest-exorcist-in-another-world, 1, Saikyou Onmyouji no Isekai Tenseiki
