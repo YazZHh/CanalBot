@@ -20,7 +20,6 @@ pip3 install feedparser
 pip3 install python-qbittorrent
 apt-get update && apt-get upgrade
 ```
-​
 ## What does this script do ?
 It will check for new episodes in the RSS every 7 minutes and if it finds one, it will download and encode the episode to the selected location.
 
