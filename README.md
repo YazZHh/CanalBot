@@ -1,6 +1,6 @@
 # CanalBot
 A small Python script ~~not well written~~ made to automate the addition of airing anime on my server, using Tsundere-Raws RSS page on Nyaa.
-Originally made to work on a **linux** server, with [JellyFin](https://github.com/jellyfin/jellyfin), Plex or other Streaming service
+Originally made to work on a **linux** server, with [JellyFin](https://github.com/jellyfin/jellyfin), Plex or other Streaming service.
 
 ## Requirements :
 - Python 3.7 at least (support is not assured for older versions)
@@ -22,7 +22,7 @@ apt-get update && apt-get upgrade
 ```
 ​
 ## What does this script do ?
-It will check for new episodes in the RSS every 7 minutes and if it finds one, it will download and encode the episode to the selected location
+It will check for new episodes in the RSS every 7 minutes and if it finds one, it will download and encode the episode to the selected location.
 
 (exactly 7 minutes to avoid getting tempban from DNS servers or Nyaa, you can choose between encoding or copying the file)
 ​
@@ -65,21 +65,20 @@ target_folder/
             └─ anime_name.s1e03.suffix.ass
             └─ ...
 ```
-​
 ## Settings
 - `delete_torrents_afterwards` if set to True will delete permanently torrent file *(the downloaded one, not the file encoded or copied)* from disk and qBittorrent Web UI.
 - `auto_encode` do what its name does : if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location.
 - `lang` is used to choose the language of subtitles that will be burned in the video (however Tsundere-Raws provides french subs).
-- `extract_subtitles` if set to True the script will extract subtitles see the [file structure](#File-Structure)
+- `extract_subtitles` if set to True the script will extract subtitles see the [file structure](#File-Structure).
 - `suffix` define the end of the file. Episode name will be in this format, again, see the [file structure](#File-Structure).
-- `quality` obviously the video quality of the episodes you want the script to download (1080p OR 720p)
-- `handbrake_settings` are the settings that HandBrakeCLI will use when encoding the file
+- `quality` obviously the video quality of the episodes you want the script to download (1080p OR 720p).
+- `handbrake_settings` are the settings that HandBrakeCLI will use when encoding the file.
 - `target_directory` tells the script where does the episodes will be storen, see the [file structure](#File-Structure) one more time.
-- `torrents_location` define on which directory torrents are downloaded
-- `linuxuser` specify which linux user shoud own the files
-- `user` is the user of the qBittorrent Web UI
-- `password` is the password of the qBittorrent Web UI
-- `webui_link` set the link to the qBittorrent Web UI
+- `torrents_location` define on which directory torrents are downloaded.
+- `linuxuser` specify which linux user shoud own the files.
+- `user` is the user of the qBittorrent Web UI.
+- `password` is the password of the qBittorrent Web UI.
+- `webui_link` set the link to the qBittorrent Web UI.
 ​
 ## Customisation
 - You can customise the encoding command if you want, *see [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*.
