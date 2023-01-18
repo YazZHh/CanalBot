@@ -60,9 +60,9 @@ target_folder/
          ├─ anime_name.s1e03.suffix.mp4
          ├─ ...
          └─ subtitles/
-            └─ anime_name.s1e01.suffix.ass
-            └─ anime_name.s1e02.suffix.ass
-            └─ anime_name.s1e03.suffix.ass
+            ├─ anime_name.s1e01.suffix.ass
+            ├─ anime_name.s1e02.suffix.ass
+            ├─ anime_name.s1e03.suffix.ass
             └─ ...
 ```
 ## Settings
