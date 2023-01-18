@@ -328,7 +328,7 @@ if __name__ == "__main__":
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/")
                                     extract_command = f"mkvextract tracks {settings.torrents_location}/{input_file_name} 2:{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
                                     os.system(extract_command)
-                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
+                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")
 
                                 try:                                            # Removes the keyword from the new_torrent_list
@@ -343,10 +343,8 @@ if __name__ == "__main__":
                 clean_torrents()
 
             print(f"\n\033[4m{request_count} requests made\033[0m")
-            print("new_torrent_found_list =", new_torrent_found_list) # DEBUG
 
             if encode == False:
-                #if new... < 0:
                 if len(new_torrent_found_list) > 0:
                     print("Wating 2 minutes before the next request...")
                     wait(120)
