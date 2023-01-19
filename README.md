@@ -33,7 +33,7 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 - Bitrate : 2500kbps x264
 - Audio Bitrate : 512kbps (to get the highest bitrate)
 - Subtitle : Hardub
-​
+
 *you can of course change the encoding settings, please refer to [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*
 ​
 ## Usage guide :
