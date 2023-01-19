@@ -26,7 +26,7 @@ It will check for new episodes in the RSS every 7 minutes and if it finds one, i
 (exactly 7 minutes to avoid getting tempban from DNS servers or Nyaa, you can choose between encoding or copying the file)
 ​
 
-**This script was intended to work with Tsudnere-Raws torrents, giving the script another RSS feed will certainly break the script.**
+**This script was intended to work with Tsundere-Raws torrents, giving the script another RSS feed will certainly break the script.**
 ​
 
 Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)*
