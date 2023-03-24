@@ -74,7 +74,7 @@ target_folder/
 - `handbrake_settings` are the settings that HandBrakeCLI will use when encoding the file.
 - `target_directory` tells the script where does the episodes will be storen, see the [file structure](#File-Structure) one more time.
 - `torrents_location` define on which directory torrents are downloaded.
-- `linuxuser` specify which linux user shoud own the files.
+- `linuxuser` specify which linux user should own the files.
 - `user` is the user of the qBittorrent Web UI.
 - `password` is the password of the qBittorrent Web UI.
 - `webui_link` set the link to the qBittorrent Web UI.
