@@ -31,7 +31,7 @@ crash = False
 fail_count = 0
 new_torrent_found_list = []
 
-print("\033[1;96mCanalBot v0.7.1\033[0m")
+print("\033[1;96mCanalBot v0.7.2\033[0m")
 
 class txt:
 
@@ -115,16 +115,25 @@ def search_index(file_name):
 def get_ep_number(torrent_name):
     index = search_index(torrent_name)
     index2 = torrent_name.find("VOSTFR")
+    print(index2)
+    if index2 == -1:           # Handle the case of a toreent name from Disney plus, which is multi subs as there is no "VOSTFR" in the torrent_name
+        index2 = torrent_name.find(settings.quality)
     return torrent_name[index + 4:index2 - 1]
 
 def check_if_added(index, keyword, ep_number):
-        check = False
-        for torrent in qb.torrents():
-            torrent_name = torrent['name']
-            if torrent_name.find(keyword) != -1:
-                if torrent_name[index + 4:index + 6] == ep_number:
-                    check = True
-        return check
+    check = False
+    for torrent in qb.torrents():
+        torrent_name = torrent['name']
+        if torrent_name.find(keyword) != -1:
+            if torrent_name[index + 4:index + 6] == ep_number:
+                check = True
+    return check
+
+def check_size(srt_size):
+    if srt_size[-3:len(srt_size)] == "GiB":
+        return False if float(srt_size[0:-4]) > 5.0 else True
+    else:
+        return True
 
 def rss_search(keyword, quality):
     global new_torrent_found_list
@@ -135,21 +144,22 @@ def rss_search(keyword, quality):
         entry_number += 1
         if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword
             rss_torrent_title = entries[entry_number].title
-            if rss_torrent_title.find(quality) != -1 and rss_torrent_title.find('VOSTFR') != -1:                # Then search for the right quality
-                torrent_index = search_index(rss_torrent_title)
-                if torrent_index != None :
-                    if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 4:torrent_index + 6]) == False:
-                        qb.download_from_link(entries[entry_number].link)
-                        rss_search_results.append(entries[entry_number].title)
-                        print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
-                        if keyword not in new_torrent_found_list:                                               # Only add if the keyword isn't already in new_torrent_list
-                            new_torrent_found_list.append(keyword)
+            if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('VOSTFR') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1:      # Then search for the right quality, That is NOT an OVA (S00),
+                if check_size(entries[entry_number].nyaa_size) == True:                                                                                                                 # and which is VOSTFR or a Disney+ release (multi subs)
+                    torrent_index = search_index(rss_torrent_title)
+                    if torrent_index != None :
+                        if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 4:torrent_index + 6]) == False:
+                            qb.download_from_link(entries[entry_number].link)
+                            rss_search_results.append(entries[entry_number].title)
+                            print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
+                            if keyword not in new_torrent_found_list:                                               # Only add if the keyword isn't already in new_torrent_list
+                                new_torrent_found_list.append(keyword)
+                            else:
+                                new_torrent_found_list
                         else:
-                            new_torrent_found_list
-                    else:
-                        print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
-                        rss_search_results.append(entries[entry_number].title)
-                    found = True
+                            print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
+                            rss_search_results.append(entries[entry_number].title)
+                        found = True
     if found == False:
         not_found.append(keyword)
 
@@ -214,11 +224,11 @@ def time_calculation(time_in_seconds):
 
 def wait(seconds):
     for remaining_seconds in range(seconds):
-        sys.stdout.write(f"\033[90mTime remaining : {time_calculation(seconds - remaining_seconds)}\033[0m                                                   ")
+        sys.stdout.write(f"\033[90mTime remaining : {time_calculation(seconds - remaining_seconds)}\033[0m                                              ")
         sys.stdout.write("\r")
         sys.stdout.flush()
         time.sleep(1)
-    sys.stdout.write("\r                                                   \r")
+    sys.stdout.write("\r                                              \r")
     sys.stdout.flush()
 
 def search_for_new_torrents():
@@ -323,12 +333,12 @@ if __name__ == "__main__":
                                     os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
 
-                                if settings.extract_subtitles == True and not os.path.exists(f"{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}"):
+                                if settings.extract_subtitles == True and not os.path.exists(f"{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}") and file_name.find("DSNP") == - 1:
                                     print("\033[0;35mExtracting french subtitles\033[0m")
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/")
                                     extract_command = f"mkvextract tracks {settings.torrents_location}/{input_file_name} 2:{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
                                     os.system(extract_command)
-                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
+                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")
 
                                 try:                                            # Removes the keyword from the new_torrent_list
