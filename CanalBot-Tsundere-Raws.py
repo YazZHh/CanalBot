@@ -296,7 +296,7 @@ if __name__ == "__main__":
                     for torrent in torrents_info:
                         file_name = torrent['name']
                         if file_name.find(settings.rss_link[28:-1]) != -1 and not processed_list.check_if_processed(file_name) and anime_list.check_if_on_the_list(file_name):
-                            if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL':
+                            if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL' and torrent['state'] != 'metaDL':
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
                                 anime_name = file_info[3]
                                 episode_number = get_ep_number(file_name)
