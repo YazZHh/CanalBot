@@ -51,18 +51,17 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 My script will respect this file structure (with default settings plus extract_subtitles enabled):
 ```
 target_folder/
-└─ animes/
-   └─ anime_name/
-      └─ s1/
-         ├─ anime_name.s1e01.suffix.mp4
-         ├─ anime_name.s1e02.suffix.mp4
-         ├─ anime_name.s1e03.suffix.mp4
-         ├─ ...
-         └─ subtitles/
-            ├─ anime_name.s1e01.suffix.ass
-            ├─ anime_name.s1e02.suffix.ass
-            ├─ anime_name.s1e03.suffix.ass
-            └─ ...
+└─ anime_name/
+   └─ s1/
+      ├─ anime_name.s1e01.suffix.mp4
+      ├─ anime_name.s1e02.suffix.mp4
+      ├─ anime_name.s1e03.suffix.mp4
+      ├─ ...
+      └─ subtitles/
+         ├─ anime_name.s1e01.suffix.ass
+         ├─ anime_name.s1e02.suffix.ass
+         ├─ anime_name.s1e03.suffix.ass
+         └─ ...
 ```
 ## Settings
 - `delete_torrents_afterwards` if set to True will delete permanently torrent file *(the downloaded one, not the file encoded or copied)* from disk and qBittorrent Web UI.
