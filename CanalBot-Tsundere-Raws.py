@@ -93,10 +93,13 @@ class txt:
         return False
 
 def index_verify(file_name, index):                                     # Theses three following index_things functions work together and return the position of the index of the file (Here used to search " - ")
-    try:                                                                # It finds the first occurence of the index, then verify it by trying to int() the two next characters (the two next characters being the episode number)
-        int(file_name[index + 1:index + 3])
-        return True
-    except ValueError:
+    if file_name[index + 3:index + 4] == "E":
+        try:                                                                # It finds the first occurence of the index, then verify it by trying to int() the two next characters (the two next characters being the episode number)
+            int(file_name[index + 1:index + 3])
+            return True
+        except ValueError:
+            return False
+    else:
         return False
 
 def find_index(file_name, index, number):
@@ -107,7 +110,7 @@ def find_index(file_name, index, number):
     return start
 
 def search_index(file_name):
-    for i in range(1, 5):
+    for i in range(1, 2):
         if index_verify(file_name, find_index(file_name, "S", i)):
             return find_index(file_name, "S", i)
 
