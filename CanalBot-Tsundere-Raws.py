@@ -14,7 +14,6 @@ class settings:
     quality = "1080p"                                         # Video quality of the torrents
     handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
     target_directory = "/animes/output/directory"             # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
-    torrents_location = "/animes/torrent/directory"           # Episodes files should be in this directory, please configure your qBittorrent Web UI
     linuxuser = "user"                                        # Linux user who will own and get the acces rights to the files (775 rights)
     user = "admin"                                            # Username of your qBittorrent Web UI
     password = "adminadmin"                                   # Password for the Web ui
@@ -300,7 +299,7 @@ if __name__ == "__main__":
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
                                 anime_name = file_info[3]
                                 episode_number = get_ep_number(file_name)
-                                input_file_name = file_name.replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
+                                input_file_name = torrent['content_path'].replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
                                 output_file_name = f'{anime_name.replace(" ", ".")}.s{file_info[2]}e{episode_number}.{settings.suffix}'.replace(" ", "-")      # Replace every space by a point to make sure there is no
 
                                 if settings.auto_encode == True:    # Encoding the file
@@ -309,7 +308,7 @@ if __name__ == "__main__":
                                         print(f"\033[35mSkipping encoding for {file_name} : output file already exists\033[0m")
                                     else:
                                         print(f"\033[96mEncoding {file_name} to {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}\033[0m..")
-                                        os.system(f"HandBrakeCLI -i {settings.torrents_location}/{input_file_name} -o {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'} {settings.handbrake_settings}")
+                                        os.system(f"HandBrakeCLI -i {input_file_name} -o {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'} {settings.handbrake_settings}")
                                         print("\033[92mDone !\033[0m")
                                         last_torrent_proceed = file_name
                                         encode = True
@@ -319,7 +318,7 @@ if __name__ == "__main__":
                                         print(f"\033[35mSkipping copying {file_name} : output file already exists\033[0m")
                                     else:
                                         print(f"\033[96mCopying {file_name} to {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}..\033[0m")
-                                        os.system(f"cp {settings.torrents_location}/{input_file_name} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
+                                        os.system(f"cp {input_file_name} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
                                         print("\033[92mDone !\033[0m")
                                         last_torrent_proceed = file_name
 
@@ -336,7 +335,7 @@ if __name__ == "__main__":
                                 if settings.extract_subtitles == True and not os.path.exists(f"{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}") and file_name.find("DSNP") == - 1:
                                     print("\033[0;35mExtracting french subtitles\033[0m")
                                     os.system(f"mkdir -p {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/")
-                                    extract_command = f"mkvextract tracks {settings.torrents_location}/{input_file_name} 2:{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
+                                    extract_command = f"mkvextract tracks {input_file_name} 2:{settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
                                     os.system(extract_command)
                                     os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
                                     os.system(f"sudo chmod 775 {settings.target_directory}/animes/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")
