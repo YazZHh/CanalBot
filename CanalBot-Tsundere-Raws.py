@@ -114,13 +114,13 @@ def search_index(file_name):
         if index_verify(file_name, find_index(file_name, "S", i)):
             return find_index(file_name, "S", i)
 
-def get_ep_number(torrent_name):
+def get_season_ep_number(torrent_name):
     index = search_index(torrent_name)
     index2 = torrent_name.find("VOSTFR")
-    print(index2)
+
     if index2 == -1:           # Handle the case of a toreent name from Disney plus, which is multi subs as there is no "VOSTFR" in the torrent_name
         index2 = torrent_name.find(settings.quality)
-    return torrent_name[index + 4:index2 - 1]
+    return (torrent_name[index + 1:index + 3], torrent_name[index + 4:index2 - 1])
 
 def check_if_added(index, keyword, ep_number):
     check = False
@@ -173,7 +173,7 @@ def clean_torrents():
         for anime_torrent in delete_list:
             torrent_index = search_index(anime_torrent)
             anime_name = anime_torrent[0:torrent_index - 1]
-            ep_number = get_ep_number(anime_torrent)
+            ep_number = get_season_ep_number(anime_torrent)
             for torrent in torrents_info:
                 torrent_file_name, torrent_id = torrent['name'], torrent['hash']
                 if torrent_file_name.find(anime_name) != -1 and torrent_file_name.find(f"E{ep_number}") != -1:
@@ -301,7 +301,7 @@ if __name__ == "__main__":
                             if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL' and torrent['state'] != 'metaDL':
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
                                 anime_name = file_info[3]
-                                episode_number = get_ep_number(file_name)
+                                episode_number = get_season_ep_number(file_name)[1]
                                 input_file_name = torrent['content_path'].replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
                                 output_file_name = f'{anime_name.replace(" ", ".")}.s{file_info[2]}e{episode_number}.{settings.suffix}'.replace(" ", "-")      # Replace every space by a point to make sure there is no
 
