@@ -63,7 +63,7 @@ class txt:
         for anime in self.data:
             if anime != ['']:
                 if file_name.find(anime[0]) != -1:
-                    return anime[0], anime[1], anime[2], anime[3]
+                    return anime[0], anime[1], anime[2]
         return None
 
     def check_if_on_the_list(self, file_name):
