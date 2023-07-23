@@ -30,7 +30,7 @@ crash = False
 fail_count = 0
 new_torrent_found_list = []
 
-print("\033[1;96mCanalBot v0.7.2\033[0m")
+print("\033[1;96mCanalBot v0.7.4\033[0m")
 
 class txt:
 
@@ -301,27 +301,27 @@ if __name__ == "__main__":
                             if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL' and torrent['state'] != 'metaDL':
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
                                 anime_name = file_info[3]
-                                episode_number = get_season_ep_number(file_name)[1]
+                                season_number, episode_number = get_season_ep_number(file_name)
                                 input_file_name = torrent['content_path'].replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
-                                output_file_name = f'{anime_name.replace(" ", ".")}.s{file_info[2]}e{episode_number}.{settings.suffix}'.replace(" ", "-")      # Replace every space by a point to make sure there is no
+                                output_file_name = f'{anime_name.replace(" ", ".")}.s{season_number}e{episode_number}.{settings.suffix}'.replace(" ", "-")      # Replace every space by a point to make sure there is no
 
                                 if settings.auto_encode == True:    # Encoding the file
-                                    os.system(f"mkdir -p {settings.target_directory}/{file_info[1]}/s{file_info[2]}")    # Create a folder for the output file, if wasn't already
-                                    if os.path.exists(f"{settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}"):
+                                    os.system(f"mkdir -p {settings.target_directory}/{file_info[1]}/s{season_number}")    # Create a folder for the output file, if wasn't already
+                                    if os.path.exists(f"{settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'}"):
                                         print(f"\033[35mSkipping encoding for {file_name} : output file already exists\033[0m")
                                     else:
-                                        print(f"\033[96mEncoding {file_name} to {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}\033[0m..")
-                                        os.system(f"HandBrakeCLI -i {input_file_name} -o {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'} {settings.handbrake_settings}")
+                                        print(f"\033[96mEncoding {file_name} to {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'}\033[0m..")
+                                        os.system(f"HandBrakeCLI -i {input_file_name} -o {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'} {settings.handbrake_settings}")
                                         print("\033[92mDone !\033[0m")
                                         last_torrent_proceed = file_name
                                         encode = True
 
                                 else:                               # Copying the file to the destination folder
-                                    if os.path.exists(f"{settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}"):
+                                    if os.path.exists(f"{settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}"):
                                         print(f"\033[35mSkipping copying {file_name} : output file already exists\033[0m")
                                     else:
-                                        print(f"\033[96mCopying {file_name} to {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}..\033[0m")
-                                        os.system(f"cp {input_file_name} {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
+                                        print(f"\033[96mCopying {file_name} to {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}..\033[0m")
+                                        os.system(f"cp {input_file_name} {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}")
                                         print("\033[92mDone !\033[0m")
                                         last_torrent_proceed = file_name
 
@@ -329,19 +329,19 @@ if __name__ == "__main__":
                                 processed_list.write_to_txt()
 
                                 if settings.auto_encode == True:    # Giving the file the right permissions
-                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}")
-                                    os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mp4'}")
+                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'}")
+                                    os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'}")
                                 else:
-                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
-                                    os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}")
+                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}")
+                                    os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}")
 
-                                if settings.extract_subtitles == True and not os.path.exists(f"{settings.target_directory}/{file_info[1]}/s{file_info[2]}/{output_file_name + '.mkv'}") and file_name.find("DSNP") == - 1:
+                                if settings.extract_subtitles == True and not os.path.exists(f"{settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}") and file_name.find("DSNP") == - 1:
                                     print("\033[0;35mExtracting french subtitles\033[0m")
-                                    os.system(f"mkdir -p {settings.target_directory}/{file_info[1]}/s{file_info[2]}/subtitles/")
-                                    extract_command = f"mkvextract tracks {input_file_name} 2:{settings.target_directory}/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}"
+                                    os.system(f"mkdir -p {settings.target_directory}/{file_info[1]}/s{season_number}/subtitles/")
+                                    extract_command = f"mkvextract tracks {input_file_name} 2:{settings.target_directory}/{file_info[1]}/s{season_number}/subtitles/{output_file_name + '.ass'}"
                                     os.system(extract_command)
-                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
-                                    os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{file_info[2]}/subtitles/{output_file_name + '.ass'}")
+                                    os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{season_number}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
+                                    os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{season_number}/subtitles/{output_file_name + '.ass'}")
 
                                 try:                                            # Removes the keyword from the new_torrent_list
                                     new_torrent_found_list.remove(file_info[0])
