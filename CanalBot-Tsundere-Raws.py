@@ -300,7 +300,7 @@ if __name__ == "__main__":
                         if file_name.find(settings.rss_link[28:-1]) != -1 and not processed_list.check_if_processed(file_name) and anime_list.check_if_on_the_list(file_name):
                             if torrent['state'] != 'downloading' and torrent['state'] != 'stalledDL' and torrent['state'] != 'metaDL' and torrent['state'] != 'checkingResumeData':
                                 file_info = anime_list.get_info(file_name)                                              # Get infos from anime_list.txt
-                                anime_name = file_info[3]
+                                anime_name = file_info[2]
                                 season_number, episode_number = get_season_ep_number(file_name)
                                 input_file_name = torrent['content_path'].replace(" ", "\ ").replace("(", "\(").replace(")", "\)").replace("\'", "\\'")    # Small changes needed in order to use the file in a linux command
                                 output_file_name = f'{anime_name.replace(" ", ".")}.s{season_number}e{episode_number}.{settings.suffix}'.replace(" ", "-")      # Replace every space by a point to make sure there is no
