@@ -1,18 +1,13 @@
-BOFURI, bofuri, 2, Itai no wa Iya nano de Bougyoryoku ni Kyokufuri Shitai to Omoimasu
-Yamada, my-love-story-with-yamada-at-lv999, 1, Yamada-kun to Lv999 no Koi wo Suru
-Dangers, the-dangers-in-my-heart, 1, Boku no Kokoro no Yabai Yatsu
-Smartphone, in-another-world-with-my-smartphone, 2, Isekai wa Smartphone to Tomo ni 2
-Clueless, my-clueless-first-friend, 1, Jijou wo Shiranai Tenkousei ga Guigui Kuru
-Aristocrat, noble-new-world-adventures, 1, Tensei Kizoku no Isekai Boukenroku Jichou wo Shiranai Kamigami no Shito
-Cheat, cheat-skill-level-up, 1, Isekai de Cheat Skill wo Te ni Shita Ore wa Genjitsu Sekai wo mo Musou Suru Level Up wa Jinsei wo Kaeta
-Mew, tokyo-mew-mew-new, 2, Tokyo Mew Mew New
-KamiKatsu, kamisama-operation-divine, 1, Kaminaki Sekai no Kamisama Katsudou
-Legendary, the-legendary-hero-is-dead, 1, Yuusha ga Shinda!
-Crisis, too-cute-crisis, 1, Kawaisugi Crisis
-Mashle, mashle-magic-and-muscles, 1, Mashle
-TONIKAWA, tonikawa-over-the-moon-for-you, 2, Tonikaku Kawaii
-Goddess, the-cafe-terrace-and-its-goddesses, 1, Megami no Cafe Terrace
-Galaxy, a-galaxy-next-door, 1, Otonari ni Ginga
-Raeliana, the-reason-why-raeliana-ended-up-at-the-dukes-mansion, 1, Kanojo ga Koushaku-tei ni Itta Riyuu
-Heavenly, heavenly-delusion, 1, Tengoku Daimakyou
-Oshi no, oshi-no-ko, 1, Oshi no Ko
+Strongest, am-i-actually-the-strongest, Jitsu wa Ore, Saikyou deshita
+Ayaka, ayaka-a-story-of-bonds-and-wounds, Ayaka
+Liar, liar-liar, Liar Liar
+Part-Timer, the-devil-is-a-part-timer, Hataraku Maou-sama
+Spy, spy-classroom, Spy Kyoushitsu
+Rent, rent-a-girlfriend, Kanojo Okarishimasu
+Masamune, masamune-kuns-revenge, Masamune-kun no Revenge
+Gathering, dark-gathering, Dark Gathering
+Mushoku, mushoku-tensei, Mushoku Tensei
+Sweet, sweet-reincarnation, Okashi na Tensei
+Heroes, classroom-for-heroes, Eiyuu Kyoushitsu
+Maid, the-duke-of-death-and-his-maid, Shinigami Bocchan to Kuro Maid
+Dreaming, the-dreaming-boy-is-a-realist, Yumemiru Danshi wa Genjitsushugisha
