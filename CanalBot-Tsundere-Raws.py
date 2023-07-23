@@ -110,24 +110,23 @@ def find_index(file_name, index, number):
     return start
 
 def search_index(file_name):
-    for i in range(1, 2):
+    for i in range(1, 5):
         if index_verify(file_name, find_index(file_name, "S", i)):
             return find_index(file_name, "S", i)
 
 def get_season_ep_number(torrent_name):
     index = search_index(torrent_name)
     index2 = torrent_name.find("VOSTFR")
-
     if index2 == -1:           # Handle the case of a toreent name from Disney plus, which is multi subs as there is no "VOSTFR" in the torrent_name
         index2 = torrent_name.find(settings.quality)
     return (torrent_name[index + 1:index + 3], torrent_name[index + 4:index2 - 1])
 
-def check_if_added(index, keyword, ep_number):
+def check_if_added(index, keyword, season_number, episode_number):
     check = False
     for torrent in qb.torrents():
         torrent_name = torrent['name']
         if torrent_name.find(keyword) != -1:
-            if torrent_name[index + 4:index + 6] == ep_number:
+            if torrent_name[index + 1:index + 3] == season_number and torrent_name[index + 4:index + 6] == episode_number:
                 check = True
     return check
 
@@ -149,8 +148,9 @@ def rss_search(keyword, quality):
             if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('VOSTFR') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1:      # Then search for the right quality, That is NOT an OVA (S00),
                 if check_size(entries[entry_number].nyaa_size) == True:                                                                                                                 # and which is VOSTFR or a Disney+ release (multi subs)
                     torrent_index = search_index(rss_torrent_title)
-                    if torrent_index != None :
-                        if check_if_added(torrent_index, keyword, rss_torrent_title[torrent_index + 4:torrent_index + 6]) == False:
+                    if torrent_index != None:
+                        season_number, episode_number = rss_torrent_title[torrent_index + 1:torrent_index + 3], rss_torrent_title[torrent_index + 4:torrent_index + 6]
+                        if check_if_added(torrent_index, keyword, season_number, episode_number) == False:
                             qb.download_from_link(entries[entry_number].link)
                             rss_search_results.append(entries[entry_number].title)
                             print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
