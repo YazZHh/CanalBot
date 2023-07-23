@@ -119,7 +119,10 @@ def get_season_ep_number(torrent_name):
     index2 = torrent_name.find("VOSTFR")
     if index2 == -1:           # Handle the case of a toreent name from Disney plus, which is multi subs as there is no "VOSTFR" in the torrent_name
         index2 = torrent_name.find(settings.quality)
-    return (torrent_name[index + 1:index + 3], torrent_name[index + 4:index2 - 1])
+    if torrent_name[index + 1:index + 2] == "0":
+        season_number = torrent_name[index + 2:index + 3]
+    episode_number = torrent_name[index + 4:index2 - 1]
+    return (season_number, episode_number)
 
 def check_if_added(index, keyword, season_number, episode_number):
     check = False
@@ -145,7 +148,7 @@ def rss_search(keyword, quality):
         entry_number += 1
         if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword
             rss_torrent_title = entries[entry_number].title
-            if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('VOSTFR') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1:      # Then search for the right quality, That is NOT an OVA (S00),
+            if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('CR') != -1 or rss_torrent_title.find('ADN') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1:      # Then search for the right quality, That is NOT an OVA (S00),
                 if check_size(entries[entry_number].nyaa_size) == True:                                                                                                                 # and which is VOSTFR or a Disney+ release (multi subs)
                     torrent_index = search_index(rss_torrent_title)
                     if torrent_index != None:
