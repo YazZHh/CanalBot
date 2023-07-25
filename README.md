@@ -27,10 +27,9 @@ It will check for new episodes in the RSS every 7 minutes and if it finds one, i
 ​
 
 **This script was intended to work with Tsundere-Raws torrents, giving the script another RSS feed will certainly break the script.**
-​
 
 Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)*
-- Bitrate : 2500kbps x264
+- Bitrate : 2500kbps x264 Variable Framerate optimized for HTTP streaming
 - Audio Bitrate : 512kbps (to get the highest bitrate)
 - Subtitle : Hardub
 
@@ -39,10 +38,10 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 ## Usage guide :
 - Install all dependencies.
 - Start qBitrorrent Web UI if it wasn't already (with command `qbittorrent-nox -d`).
-- Download the file `CanalBot.py` into a direcroty.
-- Create a file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, season_number, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` can be set to whatever name you want).
-  - ⚠️ For the keyword, be sure to use a keyword that will work for both the torrent name on nyaa and the video file name itself.
-  - Also be aware that any space in the `anime_name` will be replaced by a dot.
+- Download `CanalBot.py` into a direcroty.
+- Create a file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` can different from `anime_name` and vice versa).
+  - ⚠️ For the keyword, be sure to use a keyword that will work for both the torrent name on nyaa and the video file name itself. Also make sure that the keyword only works for the anime you're adding (otherwise it could add unwanted animes)
+  - Any space in the `anime_name` will be replaced by a dot.
 - Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings, *see [Settings](#settings) below*.
 - Now run the script in a screen (linux package : `screen -S canalbot`) on your linux server to avoid linux killing the process, and that's it.
 - If the script crashes, just restart it, it won't re-add episodes, or re-encode episode.
@@ -72,7 +71,6 @@ target_folder/
 - `quality` obviously the video quality of the episodes you want the script to download (1080p OR 720p).
 - `handbrake_settings` are the settings that HandBrakeCLI will use when encoding the file.
 - `target_directory` tells the script where does the episodes will be storen, see the [file structure](#File-Structure) one more time.
-- `torrents_location` define on which directory torrents are downloaded.
 - `linuxuser` specify which linux user should own the files.
 - `user` is the user of the qBittorrent Web UI.
 - `password` is the password of the qBittorrent Web UI.
