@@ -145,19 +145,19 @@ def rss_search(keyword, quality):
     found = False
     entry_number = -1                                                                                           # -1 to start at the first result (because even before searching, we add 1 to entry_number)
     for entry in entries:
-        entry_number += 1
-        if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword
-            rss_torrent_title = entries[entry_number].title
-            if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('CR') != -1 or rss_torrent_title.find('ADN') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1:      # Then search for the right quality, That is NOT an OVA (S00),
-                if check_size(entries[entry_number].nyaa_size) == True:                                                                                                                 # and which is VOSTFR or a Disney+ release (multi subs)
-                    torrent_index = search_index(rss_torrent_title)
+        entry_number += 1                                                                                       # Here starts all the verifications on the torrents needed to identify them and making sure they follow certain rules.
+        if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword.
+            rss_torrent_title = entries[entry_number].title                                                     # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
+            if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('VOSTFR') != -1 or rss_torrent_title.find("DSNP") != -1) and (rss_torrent_title.find('CR') != -1 or rss_torrent_title.find('ADN') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1:
+                if check_size(entries[entry_number].nyaa_size) == True:                                         # that it comes from CR, ADN or DSNP and that is not an OVA (S00).
+                    torrent_index = search_index(rss_torrent_title)                                             # Then making sure this torrent is not a film or multiples episodes by checking its size, and then cheking its index (S**E**) is correct or exists
                     if torrent_index != None:
                         season_number, episode_number = rss_torrent_title[torrent_index + 1:torrent_index + 3], rss_torrent_title[torrent_index + 4:torrent_index + 6]
-                        if check_if_added(torrent_index, keyword, season_number, episode_number) == False:
+                        if check_if_added(torrent_index, keyword, season_number, episode_number) == False:      # Last but not least, check if the torrent was previously added in qBittorrent, and then add it if thats not the case
                             qb.download_from_link(entries[entry_number].link)
                             rss_search_results.append(entries[entry_number].title)
                             print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
-                            if keyword not in new_torrent_found_list:                                               # Only add if the keyword isn't already in new_torrent_list
+                            if keyword not in new_torrent_found_list:                                           # Only add if the keyword isn't already in new_torrent_list
                                 new_torrent_found_list.append(keyword)
                             else:
                                 new_torrent_found_list
