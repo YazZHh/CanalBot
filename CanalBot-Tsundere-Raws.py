@@ -22,7 +22,7 @@ class settings:
 
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
-last_torrent_proceed = None
+last_torrent_processed = None
 source_rss = []
 qb = Client(settings.webui_link)
 start_time = time.time()
@@ -291,8 +291,8 @@ if __name__ == "__main__":
                     print("\033[1;91mError while retrieving Torrents info from the qBittorrent Web UI\033[0m")
                     crash = True
 
-            if last_torrent_proceed != None:
-                print("\033[92mLast torrent proceed\033[0m :", last_torrent_proceed)
+            if last_torrent_processed != None:
+                print("\033[92mLast torrent processed\033[0m :", last_torrent_processed)
 
             if request_count != 1:
                 print("Total run time :", time_calculation(round((time.time() - start_time))))
@@ -316,7 +316,7 @@ if __name__ == "__main__":
                                         print(f"\033[96mEncoding {file_name} to {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'}\033[0m..")
                                         os.system(f"HandBrakeCLI -i {input_file_name} -o {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mp4'} {settings.handbrake_settings}")
                                         print("\033[92mDone !\033[0m")
-                                        last_torrent_proceed = file_name
+                                        last_torrent_processed = file_name
                                         encode = True
 
                                 else:                               # Copying the file to the destination folder
@@ -326,7 +326,7 @@ if __name__ == "__main__":
                                         print(f"\033[96mCopying {file_name} to {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}..\033[0m")
                                         os.system(f"cp {input_file_name} {settings.target_directory}/{file_info[1]}/s{season_number}/{output_file_name + '.mkv'}")
                                         print("\033[92mDone !\033[0m")
-                                        last_torrent_proceed = file_name
+                                        last_torrent_processed = file_name
 
                                 processed_list.data.append(file_name)
                                 processed_list.write_to_txt()
