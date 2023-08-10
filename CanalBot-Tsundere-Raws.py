@@ -78,6 +78,13 @@ class txt:
         temp = open(self.file_name, "w")
         temp.write(list)
 
+    def clean_processed_list(self):
+        index = 0
+        for file in self.data:
+            if file == "":
+                self.data.pop(index)
+            index += 1
+
     def clean_torrent_list(self, file_name):
         nb = 0
         for torrent in self.data:
@@ -329,6 +336,7 @@ if __name__ == "__main__":
                                         last_torrent_processed = file_name
 
                                 processed_list.data.append(file_name)
+                                processed_list.clean_processed_list()
                                 processed_list.write_to_txt()
 
                                 if settings.auto_encode == True:    # Giving the file the right permissions
