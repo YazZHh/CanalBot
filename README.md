@@ -4,7 +4,7 @@ Originally made to work on a **linux** server, with [JellyFin](https://github.co
 
 ## Requirements :
 - Python 3.7 at least (support is not assured for older versions)
-- a [qBittorrent](https://github.com/qbittorrent/qBittorrent) Web UI, **hosted on the same machine as the script** (use qBittorrent-nox on servers)
+- a [qBittorrent](https://github.com/qbittorrent/qBittorrent) Web UI, **hosted on the same machine as the script** (use [qBittorrent-nox (updated)](https://github.com/userdocs/qbittorrent-nox-static) on servers)
 - [HandBrakeCLI](https://github.com/HandBrake/HandBrake) installed on your linux distro (dpkg, not the flatpack version)
 - [mkvtoolnix](https://github.com/nmaier/mkvtoolnix), to extract subtitles
 - [feedparser](https://github.com/kurtmckee/feedparser), a python module
@@ -30,18 +30,20 @@ It will check for new episodes in the RSS every 7 minutes and if it finds one, i
 
 Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)*
 - Bitrate : 2500kbps x264 Variable Framerate optimized for HTTP streaming
-- Audio Bitrate : 512kbps (to get the highest bitrate)
+- Audio Bitrate : 512kbps (HandBrake will automatically lower that value to match the bitrate of the actual episode torrent audio track)
 - Subtitle : Hardub
 
 *you can of course change the encoding settings, please refer to [HandBrakeCLI Documentation](https://handbrake.fr/docs/en/latest/cli/cli-options.html)*
 ​
 ## Usage guide :
 - Install all dependencies.
-- Start qBitrorrent Web UI if it wasn't already (with command `qbittorrent-nox -d`).
+- Start qBitrorrent Web UI and enable the WebUI if you aren't using qBittorrent-nox.
+- Set the torrent download directory wherever you want
 - Download `CanalBot.py` into a direcroty.
-- Create a file named `anime_list.txt`, then include anime info, one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` can different from `anime_name` and vice versa).
+- Create a file named `anime_list.txt` next to it, then inside the file include animes infos one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` may be different from `anime_name` and vice versa).
   - ⚠️ For the keyword, be sure to use a keyword that will work for both the torrent name on nyaa and the video file name itself. Also make sure that the keyword only works for the anime you're adding (otherwise it could add unwanted animes)
   - Any space in the `anime_name` will be replaced by a dot.
+  - Be sure not to use invalid characters for the file name ("/", "\O", "\n", "\r", "\t", "\b", "\v", "\a" and "\f" in linux).
 - Now edit CanalBot.py and modify the first variables included in the `settings` class to match your settings, *see [Settings](#settings) below*.
 - Now run the script in a screen (linux package : `screen -S canalbot`) on your linux server to avoid linux killing the process, and that's it.
 - If the script crashes, just restart it, it won't re-add episodes, or re-encode episode.
@@ -56,7 +58,7 @@ target_folder/
       ├─ anime_name.s1e02.suffix.mp4
       ├─ anime_name.s1e03.suffix.mp4
       ├─ ...
-      └─ subtitles/
+      └─ subtitles/                       Only if extract_subtitles is set to True
          ├─ anime_name.s1e01.suffix.ass
          ├─ anime_name.s1e02.suffix.ass
          ├─ anime_name.s1e03.suffix.ass
