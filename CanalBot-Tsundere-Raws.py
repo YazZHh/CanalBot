@@ -158,11 +158,11 @@ def rss_search(keyword, quality):
         if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword.
             rss_torrent_title = entries[entry_number].title                                                     # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
             if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('VOSTFR') != -1 or rss_torrent_title.find("DSNP") != -1) and (rss_torrent_title.find('CR') != -1 or rss_torrent_title.find('ADN') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1 and (rss_torrent_title.find("MULTi") == -1 or rss_torrent_title.find("DSNP") != -1):
-                if check_size(entries[entry_number].nyaa_size) == True:                                         # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
+                if check_size(entries[entry_number].nyaa_size):                                                 # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
                     torrent_index = search_index(rss_torrent_title)                                             # Then making sure this torrent is not a film or multiples episodes by checking its size, and then cheking its index (S**E**) is correct or exists
                     if torrent_index != None:
                         season_number, episode_number = rss_torrent_title[torrent_index + 1:torrent_index + 3], rss_torrent_title[torrent_index + 4:torrent_index + 6]
-                        if check_if_added(torrent_index, keyword, season_number, episode_number) == False:      # Last but not least, check if the torrent was previously added in qBittorrent, and then add it if thats not the case
+                        if not check_if_added(torrent_index, keyword, season_number, episode_number):           # Last but not least, check if the torrent was previously added in qBittorrent, and then add it if thats not the case
                             qb.download_from_link(entries[entry_number].link)
                             rss_search_results.append(entries[entry_number].title)
                             print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
