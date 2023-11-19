@@ -30,7 +30,7 @@ crash = False
 fail_count = 0
 new_torrent_found_list = []
 
-print("\033[1;96mCanalBot v0.7.4\033[0m")
+print("\033[1;96mCanalBot v0.8\033[0m")
 
 class txt:
 
