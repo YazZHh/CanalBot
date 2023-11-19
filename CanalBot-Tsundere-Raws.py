@@ -360,10 +360,8 @@ if __name__ == "__main__":
                                         os.system(f"sudo chown {settings.linuxuser} {settings.target_directory}/{file_info[1]}/s{season_number}/subtitles/{output_file_name + '.ass'}")   # Giving file access rights
                                         os.system(f"sudo chmod 775 {settings.target_directory}/{file_info[1]}/s{season_number}/subtitles/{output_file_name + '.ass'}")
 
-                                    try:                                            # Removes the keyword from the new_torrent_list
-                                        new_torrent_found_list.remove(file_info[0])
-                                    except:
-                                        pass
+                                    # Removes the keyword from the new_torrent_list
+                                    new_torrent_found_list.remove(file_info[0]) if file_info[0] in new_torrent_found_list else new_torrent_found_list
 
                             else:
                                 print(f'\033[31mFile "{file_name}" is still downloading !\033[0m')
