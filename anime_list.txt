@@ -1,13 +1,21 @@
-Strongest, am-i-actually-the-strongest, Jitsu wa Ore, Saikyou deshita
-Ayaka, ayaka-a-story-of-bonds-and-wounds, Ayaka
-Liar, liar-liar, Liar Liar
-Part-Timer, the-devil-is-a-part-timer, Hataraku Maou-sama
-Spy, spy-classroom, Spy Kyoushitsu
-Rent, rent-a-girlfriend, Kanojo Okarishimasu
-Masamune, masamune-kuns-revenge, Masamune-kun no Revenge
-Gathering, dark-gathering, Dark Gathering
-Mushoku, mushoku-tensei, Mushoku Tensei
-Sweet, sweet-reincarnation, Okashi na Tensei
-Heroes, classroom-for-heroes, Eiyuu Kyoushitsu
-Maid, the-duke-of-death-and-his-maid, Shinigami Bocchan to Kuro Maid
-Dreaming, the-dreaming-boy-is-a-realist, Yumemiru Danshi wa Genjitsushugisha
+Gathering, animes/dark-gathering, Dark Gathering
+Frieren, animes/frieren-beyond-journeys-end, Sousou no Frieren
+S-Rank, animes/my-daughter-left-the-nest-and-returned-an-s-rank-adventurer, Boukensha ni Naritai to Miyako ni Deteitta Musume ga S-rank ni Natteta
+Frontier, animes/shangri-la-frontier, Shangri-La Frontier
+Berserk, animes/berserk-of-gluttony, Boushoku no Berserk
+Shy, animes/shy, Shy
+Rescued, animes/im-givine-the-disgraced-noble-lady-i-rescued-a-crash-course-in-naughtiness, Konyaku Haki sareta Reijou wo Hirotta Ore ga Ikenai Koto wo Oshiekomu
+Eminence, animes/the-eminence-in-shadow, Kage no Jitsuryokusha ni Naritakute!
+Derby, animes2/uma-musume, Uma Musume Pretty Derby
+ Girlfriend , animes/girlfriend-girlfriend, Kanojo mo Kanojo
+Kingdoms, animes2/the-kingdoms-of-ruins, Hametsu no Oukoku
+Dating, animes2/our-dating-story-the-experienced-you-and-the-inexperienced-me, Keiken Zumi na Kimi to Keiken Zero na Ore ga Otsukiai Suru Hanashi
+Omnipotent, animes2/the-saints-magic-power-is-omnipotent, Seijo no Maryoku wa Bannou desu
+Returner, animes2/a-returners-magic-should-be-special, Kikansha no Mahou wa Tokubetsu desu
+Potions, animes2/i-shall-survive-using-potions, Potion Danomi de Ikinobimasu!
+Spy, animes/spy-x-family, Spy x Family
+Love You, animes2/the-100-girlfriends-who-really-really-really-really-really-love-you, Kimi no Koto ga Dai Dai Dai Dai Daisuki na 100-nin no Kanojo
+Stardust, animes2/stardust-telepath, Hoshizoku Telepath
+Excalibur, animes2/the-demon-sword-master-of-excalibur-academy, Seiken Gakuin no Maken Tsukai
+Apothecary, animes/the-apothecary-diaries, Kusuriya no Hitorigoto
+Tearmoon, animes2/tearmon-empire-story, Tearmoon Teikoku Monogatari
