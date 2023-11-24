@@ -373,14 +373,14 @@ if __name__ == "__main__":
 
             if encode == False:
                 if len(new_torrent_found_list) > 0:
-                    print("Wating 2 minutes before the next request...")
+                    print("Waiting 2 minutes before the next request...")
                     wait(120)
                 else:
-                    print("Wating 7 minutes before the next request...")
+                    print("Waiting 7 minutes before the next request...")
                     wait(420)   # Change this value (in seconds) to wait more or less before the next request (default 420s, 7mn to avoid getting tempban from nyaa)
 
             elif crash == True:
-                print("Wating 30 seconds before the next request...")
+                print("Waiting 30 seconds before the next request...")
                 wait(30)
                 qb_request()
 
