@@ -1,5 +1,5 @@
 # CanalBot
-A small Python script ~~not well written~~ made to automate the addition of airing anime on my server, using Tsundere-Raws RSS page on Nyaa.
+A small Python script ~~badly written~~ made to automate the addition of airing anime on my server, using Tsundere-Raws'RSS page on Nyaa.
 Originally made to work on a **linux** server, with [JellyFin](https://github.com/jellyfin/jellyfin), Plex or other Streaming service.
 
 ## Requirements :
@@ -37,8 +37,8 @@ Default encoding settings : *(~500MB ouput file size, for a ~24mn 1080p episode)
 ​
 ## Usage guide :
 - Install all dependencies.
-- Start qBitrorrent Web UI and enable the WebUI if you aren't using qBittorrent-nox.
-- Set the torrent download directory wherever you want
+- Start qBitrorrent and enable the WebUI if you aren't using qBittorrent-nox.
+- Set the torrent download directory to wherever you want
 - Download `CanalBot.py` into a direcroty.
 - Create a file named `anime_list.txt` next to it, then inside the file include animes infos one line per anime, respecting this pattern : `rss_keyword, anime_folder_name, anime_name`, *see the [anime_list.txt example](https://github.com/YazZHh/CanalBot/blob/main/anime_list.txt)* (`anime_folder_name` may be different from `anime_name` and vice versa).
   - ⚠️ For the keyword, be sure to use a keyword that will work for both the torrent name on nyaa and the video file name itself. Also make sure that the keyword only works for the anime you're adding (otherwise it could add unwanted animes)
@@ -67,7 +67,7 @@ target_folder/
 ## Settings
 - `delete_torrents_afterwards` if set to True will delete permanently torrent file *(the downloaded one, not the file encoded or copied)* from disk and qBittorrent Web UI.
 - `auto_encode` do what its name does : if set to True, it will automatically encode the file, however if set to False, it will just copy the file to the desired location.
-- `lang` is used to choose the language of subtitles that will be burned in the video (however Tsundere-Raws provides french subs).
+- `lang` is used to choose the language of subtitles that will be burned in the video (however Tsundere-Raws only provides french subs).
 - `extract_subtitles` if set to True the script will extract subtitles see the [file structure](#File-Structure).
 - `suffix` define the end of the file. Episode name will be in this format, again, see the [file structure](#File-Structure).
 - `quality` obviously the video quality of the episodes you want the script to download (1080p OR 720p).
