@@ -1,21 +1,19 @@
-Gathering, animes/dark-gathering, Dark Gathering
 Frieren, animes/frieren-beyond-journeys-end, Sousou no Frieren
-S-Rank, animes/my-daughter-left-the-nest-and-returned-an-s-rank-adventurer, Boukensha ni Naritai to Miyako ni Deteitta Musume ga S-rank ni Natteta
 Frontier, animes/shangri-la-frontier, Shangri-La Frontier
-Berserk, animes/berserk-of-gluttony, Boushoku no Berserk
-Shy, animes/shy, Shy
-Rescued, animes/im-givine-the-disgraced-noble-lady-i-rescued-a-crash-course-in-naughtiness, Konyaku Haki sareta Reijou wo Hirotta Ore ga Ikenai Koto wo Oshiekomu
-Eminence, animes/the-eminence-in-shadow, Kage no Jitsuryokusha ni Naritakute!
-Derby, animes2/uma-musume, Uma Musume Pretty Derby
- Girlfriend , animes/girlfriend-girlfriend, Kanojo mo Kanojo
-Kingdoms, animes2/the-kingdoms-of-ruins, Hametsu no Oukoku
-Dating, animes2/our-dating-story-the-experienced-you-and-the-inexperienced-me, Keiken Zumi na Kimi to Keiken Zero na Ore ga Otsukiai Suru Hanashi
-Omnipotent, animes2/the-saints-magic-power-is-omnipotent, Seijo no Maryoku wa Bannou desu
-Returner, animes2/a-returners-magic-should-be-special, Kikansha no Mahou wa Tokubetsu desu
-Potions, animes2/i-shall-survive-using-potions, Potion Danomi de Ikinobimasu!
-Spy, animes/spy-x-family, Spy x Family
-Love You, animes2/the-100-girlfriends-who-really-really-really-really-really-love-you, Kimi no Koto ga Dai Dai Dai Dai Daisuki na 100-nin no Kanojo
-Stardust, animes2/stardust-telepath, Hoshizoku Telepath
-Excalibur, animes2/the-demon-sword-master-of-excalibur-academy, Seiken Gakuin no Maken Tsukai
 Apothecary, animes/the-apothecary-diaries, Kusuriya no Hitorigoto
-Tearmoon, animes2/tearmon-empire-story, Tearmoon Teikoku Monogatari
+Elite, animes/classroom-of-the-elite, Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e
+Magical Girls, animes2/looking-up-tomagical-girls, Mahou Shoujo ni Akogarete
+Slave, animes2/demon-slave, Mato Seihei no Slave
+Mashle, animes/mashle-magic-and-muscles, Mashle
+Wedding, animes2/tales-of-the-wedding-ring, Kekkon Yubiwa Monogatari
+Loop, animes/7th-time-loop-the-villainess-enjoys-a-carefree-life-married-to-her-worst-enemy, Loop 7-kaime no Akuyaku Reijou wa Moto Tekikoku de Jiyuu Kimamana Hanayome Seikatsu wo Mankitsu Suru
+Instant, animes2/my-instant-death-ability-is-overpowered-no-one-in-this-other-world-stans-a-chance-against-me, Sokushi Cheat ga Saikyou Sugite Isekai no Yatsura ga Marude Aite ni Naranain desu ga
+Healing, animes2/the-wrong-way-to-use-healing-magic, Chiyu Mahou no Machigatta Tsukaikata
+Leveling, animes2/solo-leveling, Ore dake Level Up na Ken
+Moonlit, animes2/tsukimichi-moonlit-fantasy, Tsuki ga Michibiku Isekai Douchuu
+Hokkaido, animes2/hokkaido-gals-are-super-adorable, Dosanko Gal wa Namaramenkoi
+Angel, animes2/the-foolish-angel-dances-with-the-devil, Oroka na Tenshi wa Akuma to Odoru
+Unwanted, animes2/the-unwanted-undead-adventurer, Nozomanu Fushi no Boukensha
+Level 99, animes2/villainess-level-99, Akuyaku Reijou Level 99 Watashi wa Ura-Boss desu ga Maou dewa Arimasen
+Rouge, animes2/metallic-rouge, Metallic Rouge
+Urusei, animes/urusei-yatsura, Urusei Yatsura
