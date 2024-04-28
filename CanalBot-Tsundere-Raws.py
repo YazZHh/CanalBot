@@ -20,6 +20,7 @@ class settings:
     webui_link = "http://localhost:8080"                      # Change "http://localhost:8080" if necessary. Please note that you have to use your domain name if you have enabled https
     rss_link = "https://nyaa(.)si/?page=rss&u=Tsundere-Raws"  # Just remove the "()" and run the script
 
+
 request_count = 0                           # Do not modify the following lines
 rss_search_results = []
 last_torrent_processed = None
@@ -147,18 +148,26 @@ def check_size(srt_size):
         return False if float(srt_size[0:-4]) > 5.0 else True
     else:
         return True
+    
+def check_torrent(torrent_name):
+    if torrent_name.find(settings.quality) != -1 and torrent_name.find("S00") == -1:
+        if (torrent_name.find('VOSTFR') != -1 or torrent_name.find("DSNP") != -1):
+            if (torrent_name.find('CR') != -1 or torrent_name.find('ADN') != -1 or torrent_name.find("DSNP") != -1):
+                if (torrent_name.find("MULTi") == -1 or torrent_name.find("DSNP") != -1):
+                    return True
+    return False
 
-def rss_search(keyword, quality):
+def rss_search(keyword_list, quality):
     global new_torrent_found_list
     entries = source_rss.entries
     found = False
     entry_number = -1                                                                                           # -1 to start at the first result (because even before searching, we add 1 to entry_number)
     for entry in entries:
         entry_number += 1                                                                                       # Here starts all the verifications on the torrents needed to identify them and making sure they follow certain rules.
-        if entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword.
-            rss_torrent_title = entries[entry_number].title                                                     # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
-            if rss_torrent_title.find(quality) != -1 and (rss_torrent_title.find('VOSTFR') != -1 or rss_torrent_title.find("DSNP") != -1) and (rss_torrent_title.find('CR') != -1 or rss_torrent_title.find('ADN') != -1 or rss_torrent_title.find("DSNP") != -1) and rss_torrent_title.find("S00") == -1 and (rss_torrent_title.find("MULTi") == -1 or rss_torrent_title.find("DSNP") != -1):
-                if check_size(entries[entry_number].nyaa_size):                                                 # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
+        for keyword in keyword_list:
+            if keyword != "" and entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword.
+                rss_torrent_title = entries[entry_number].title                                                     # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
+                if check_torrent(rss_torrent_title) and check_size(entries[entry_number].nyaa_size):                                                 # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
                     torrent_index = search_index(rss_torrent_title)                                             # Then making sure this torrent is not a film or multiples episodes by checking its size, and then cheking its index (S**E**) is correct or exists
                     if torrent_index != None:
                         season_number, episode_number = rss_torrent_title[torrent_index + 1:torrent_index + 3], rss_torrent_title[torrent_index + 4:torrent_index + 6]
@@ -249,9 +258,7 @@ def search_for_new_torrents():
     global crash
     crash = False
     try:
-        for keyword in anime_list.keywords:
-            if keyword != "":
-                rss_search(keyword, settings.quality)
+        rss_search(anime_list.keywords, settings.quality)
     except:
         crash = True
         # print("\033[1;91mError while searching for new torrents / Error while retrieving Torrents info from the qBittorrent Web UI\033[0m")
