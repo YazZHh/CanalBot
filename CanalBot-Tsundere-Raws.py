@@ -12,7 +12,7 @@ class settings:
     extract_subtitles = False                                 # Extract (french) subs to animes/anime-name/s1/subtitles/anime.name.s1e01.vostfr.ass
     suffix = "vostfr"                                         # Episode name will be in this format : {anime_name}.s1e{episode_number}.{suffix}.mp4, Change this to whatever you want
     quality = "1080p"                                         # Video quality of the torrents
-    handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
+    handbrake_settings = f"-vfr -e x264 -b 2500 -E av_aac -B 512 -T -2 -O --encoder-profile main --encoder-level 4.0 --subtitle-lang-list {lang} --subtitle-burn"  # HandBrakeCLI settings
     target_directory = "/animes/output/directory"             # This should be the directory where animes will be stored, please note that the sctipt will create a subfolder in this directory named "anime"
     linuxuser = "user"                                        # Linux user who will own and get the acces rights to the files (775 rights)
     user = "admin"                                            # Username of your qBittorrent Web UI
