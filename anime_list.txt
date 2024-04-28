@@ -1,19 +1,16 @@
-Frieren, animes/frieren-beyond-journeys-end, Sousou no Frieren
-Frontier, animes/shangri-la-frontier, Shangri-La Frontier
-Apothecary, animes/the-apothecary-diaries, Kusuriya no Hitorigoto
-Elite, animes/classroom-of-the-elite, Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e
-Magical Girls, animes2/looking-up-tomagical-girls, Mahou Shoujo ni Akogarete
-Slave, animes2/demon-slave, Mato Seihei no Slave
-Mashle, animes/mashle-magic-and-muscles, Mashle
-Wedding, animes2/tales-of-the-wedding-ring, Kekkon Yubiwa Monogatari
-Loop, animes/7th-time-loop-the-villainess-enjoys-a-carefree-life-married-to-her-worst-enemy, Loop 7-kaime no Akuyaku Reijou wa Moto Tekikoku de Jiyuu Kimamana Hanayome Seikatsu wo Mankitsu Suru
-Instant, animes2/my-instant-death-ability-is-overpowered-no-one-in-this-other-world-stans-a-chance-against-me, Sokushi Cheat ga Saikyou Sugite Isekai no Yatsura ga Marude Aite ni Naranain desu ga
-Healing, animes2/the-wrong-way-to-use-healing-magic, Chiyu Mahou no Machigatta Tsukaikata
-Leveling, animes2/solo-leveling, Ore dake Level Up na Ken
 Moonlit, animes2/tsukimichi-moonlit-fantasy, Tsuki ga Michibiku Isekai Douchuu
-Hokkaido, animes2/hokkaido-gals-are-super-adorable, Dosanko Gal wa Namaramenkoi
-Angel, animes2/the-foolish-angel-dances-with-the-devil, Oroka na Tenshi wa Akuma to Odoru
-Unwanted, animes2/the-unwanted-undead-adventurer, Nozomanu Fushi no Boukensha
-Level 99, animes2/villainess-level-99, Akuyaku Reijou Level 99 Watashi wa Ura-Boss desu ga Maou dewa Arimasen
-Rouge, animes2/metallic-rouge, Metallic Rouge
 Urusei, animes/urusei-yatsura, Urusei Yatsura
+Monster, animes2/re-monster, Re Monster
+Wolf, animes2/spice-and-wolf-2024, Ookami to Koushinryou
+Archdemon, animes2/an-archdemons-dilemma-how-to-love-your-elf-bride, Maou no Ore ga Dorei Elf wo Yome ni Shitanda ga, Dou Medereba Ii
+Irregular, animes2/the-irregular-at-magic-high-school, Mahouka Koukou no Rettousei
+Studio, animes2/studio-apartment-good-lightning-angel-included, One Room Hiatari Futsuu Tenshi-tsuki
+Maid, animes/the-duke-of-death-and-his-maid, Shinigami Bocchan to Kuro Maid
+Mushoku, animes2/mushoku-tensei, Mushoku Tensei
+Level 2, animes2/chillin-in-another-world-with-level-2-super-cheat-powers, Lv2 kara Cheat datta Moto Yuusha Kouho no Mattari Isekai Life
+Date, animes2/date-a-live, Date A Live V
+Disappearances, animes2/mysterious-disapperances, Kaii to Otome to Kamikakushi
+Salad, animes2/a-salad-bowl-of-eccentrics, Henjin no Salad Bowl
+KonoSuba, animes2/konosuba, Kono Subarashii Sekai ni Shukufuku wo
+Aristocrat, animes2/as-a-reincarnated-aristocrat-ill-use-my-appraisal-skill-to-rise-in-the-world, Tensei Kizoku Kantei Skill de Nariagaru
+Misfit, animes/the-misfit-of-demon-king-academy, Maou Gakuin no Futekigousha Shijou Saikyou no Maou no Shiso Tensei shite Shison-tachi no Gakkou e Kayou II
