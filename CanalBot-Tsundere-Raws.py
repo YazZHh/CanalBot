@@ -31,7 +31,7 @@ crash = False
 fail_count = 0
 new_torrent_found_list = []
 
-print("\033[1;96mCanalBot v0.8\033[0m")
+print("\033[1;96mCanalBot v0.8.1\033[0m")
 
 class txt:
 
@@ -149,8 +149,8 @@ def check_size(srt_size):
     else:
         return True
     
-def check_torrent(torrent_name):
-    if torrent_name.find(settings.quality) != -1 and torrent_name.find("S00") == -1:
+def check_torrent(torrent_name, quality, size):
+    if torrent_name.find(quality) != -1 and torrent_name.find("S00") == -1 and check_size(size):
         if (torrent_name.find('VOSTFR') != -1 or torrent_name.find("DSNP") != -1):
             if (torrent_name.find('CR') != -1 or torrent_name.find('ADN') != -1 or torrent_name.find("DSNP") != -1):
                 if (torrent_name.find("MULTi") == -1 or torrent_name.find("DSNP") != -1):
@@ -159,32 +159,40 @@ def check_torrent(torrent_name):
 
 def rss_search(keyword_list, quality):
     global new_torrent_found_list
+    global not_found
+    not_found = keyword_list.copy()
     entries = source_rss.entries
-    found = False
     entry_number = -1                                                                                           # -1 to start at the first result (because even before searching, we add 1 to entry_number)
+    
     for entry in entries:
         entry_number += 1                                                                                       # Here starts all the verifications on the torrents needed to identify them and making sure they follow certain rules.
+
         for keyword in keyword_list:
-            if keyword != "" and entry.title.find(keyword) != -1:                                                                     # Searching for a torrent with a corresponding keyword.
-                rss_torrent_title = entries[entry_number].title                                                     # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
-                if check_torrent(rss_torrent_title) and check_size(entries[entry_number].nyaa_size):                                                 # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
-                    torrent_index = search_index(rss_torrent_title)                                             # Then making sure this torrent is not a film or multiples episodes by checking its size, and then cheking its index (S**E**) is correct or exists
+            
+            if keyword != "" and entry.title.find(keyword) != -1:                                                                               # Searching for a torrent with a corresponding keyword.
+                rss_torrent_title = entries[entry_number].title                                                                                 # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
+                
+                if check_torrent(rss_torrent_title, quality, entries[entry_number].nyaa_size):                                   # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
+                    torrent_index = search_index(rss_torrent_title)                                                                             # Then making sure this torrent is not a film or multiples episodes by checking its size, and then cheking its index (S**E**) is correct or exists
+                    
                     if torrent_index != None:
                         season_number, episode_number = rss_torrent_title[torrent_index + 1:torrent_index + 3], rss_torrent_title[torrent_index + 4:torrent_index + 6]
-                        if not check_if_added(torrent_index, keyword, season_number, episode_number):           # Last but not least, check if the torrent was previously added in qBittorrent, and then add it if thats not the case
+                        if not check_if_added(torrent_index, keyword, season_number, episode_number):                                           # Last but not least, check if the torrent was previously added in qBittorrent, and then add it if thats not the case
                             qb.download_from_link(entries[entry_number].link)
                             rss_search_results.append(entries[entry_number].title)
                             print(f'\033[1;96m\033[1mFound : "{entries[entry_number].title}"\033[0m, torrent successfully added')
-                            if keyword not in new_torrent_found_list:                                           # Only add if the keyword isn't already in new_torrent_list
-                                new_torrent_found_list.append(keyword)
-                            else:
-                                new_torrent_found_list
+                            new_torrent_found_list.append(keyword) if keyword not in new_torrent_found_list else new_torrent_found_list         # Only add if the keyword isn't already in new_torrent_list
                         else:
                             print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
                             rss_search_results.append(entries[entry_number].title)
-                        found = True
-    if found == False:
-        not_found.append(keyword)
+                        not_found.remove(keyword)
+    
+    # Cleaning the list before returning
+    for keyword in not_found:
+        if keyword == '':
+            not_found.remove(keyword)
+
+    return not_found
 
 def clean_torrents():
     delete_list = list(set(previous_rss_search_results) - set(rss_search_results))
