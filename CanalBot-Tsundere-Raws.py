@@ -185,7 +185,7 @@ def rss_search(keyword_list, quality):
                         else:
                             print(f'\033[90mTorrent "{rss_torrent_title}" have already been added..\033[0m')
                             rss_search_results.append(entries[entry_number].title)
-                        not_found.remove(keyword)
+                        not_found.remove(keyword) if keyword in not_found else not_found
     
     # Cleaning the list before returning
     for keyword in not_found:
