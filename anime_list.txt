@@ -1,16 +1,13 @@
-Moonlit, animes2/tsukimichi-moonlit-fantasy, Tsuki ga Michibiku Isekai Douchuu
-Urusei, animes/urusei-yatsura, Urusei Yatsura
-Monster, animes2/re-monster, Re Monster
 Wolf, animes2/spice-and-wolf-2024, Ookami to Koushinryou
-Archdemon, animes2/an-archdemons-dilemma-how-to-love-your-elf-bride, Maou no Ore ga Dorei Elf wo Yome ni Shitanda ga, Dou Medereba Ii
-Irregular, animes2/the-irregular-at-magic-high-school, Mahouka Koukou no Rettousei
-Studio, animes2/studio-apartment-good-lightning-angel-included, One Room Hiatari Futsuu Tenshi-tsuki
-Maid, animes/the-duke-of-death-and-his-maid, Shinigami Bocchan to Kuro Maid
-Mushoku, animes2/mushoku-tensei, Mushoku Tensei
-Level 2, animes2/chillin-in-another-world-with-level-2-super-cheat-powers, Lv2 kara Cheat datta Moto Yuusha Kouho no Mattari Isekai Life
-Date, animes2/date-a-live, Date A Live V
-Disappearances, animes2/mysterious-disapperances, Kaii to Otome to Kamikakushi
-Salad, animes2/a-salad-bowl-of-eccentrics, Henjin no Salad Bowl
-KonoSuba, animes2/konosuba, Kono Subarashii Sekai ni Shukufuku wo
-Aristocrat, animes2/as-a-reincarnated-aristocrat-ill-use-my-appraisal-skill-to-rise-in-the-world, Tensei Kizoku Kantei Skill de Nariagaru
-Misfit, animes/the-misfit-of-demon-king-academy, Maou Gakuin no Futekigousha Shijou Saikyou no Maou no Shiso Tensei shite Shison-tachi no Gakkou e Kayou II
+Oshi no Ko, animes/oshi-no-ko, Oshi no Ko
+Alya, animes2/alya-sometimes-hides-her-feelings-in-russian, Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san
+Terrace, animes/the-cafe-terrace-and-its-goddesses, Megami no Cafe Terrace
+Pseudo, animes2/pseudo-harem, Giji Harem
+Hazurewaku, animes2/hazurewaku, Hazurewaku no Joutai Ijou Skill de Saikyou ni Natta Ore ga Subete wo Juurin Suru made
+SHY, animes2/shy, Shy
+2.5, animes2/2.5-dimensional-seduction, 2.5-jigen no Ririsa
+Exploration, animes2/a-nobodys-way-up-to-an-explorarion-hero, Mob kara Hajimaru Tansaku Eiyuutan
+Dahlia, animes2/dahlia-in-bloom-crafting-a-fresh-start-with-magical-tools, Madougushi Dahlia wa Utsumukanai
+Nokotan, animes2/my-deer-friend-nokotan, Shikanoko Nokonoko Koshitantan
+Remember, animes2/why-does-nobody-remember-me-in-this-world, Naze Boku no Sekai wo Daremo Oboeteinai no ka
+Makeine, animes2/makeine-too-many-losing-heroines, Make Heroine ga Oosugiru
