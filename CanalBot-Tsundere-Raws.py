@@ -151,13 +151,25 @@ def check_size(srt_size):
     else:
         return True
     
-def check_torrent(torrent_name, quality, size):
-    if torrent_name.find(quality) != -1 and torrent_name.find("S00") == -1 and check_size(size):
-        if (torrent_name.find('VOSTFR') != -1 or torrent_name.find("DSNP") != -1):
-            if (torrent_name.find('CR') != -1 or torrent_name.find('ADN') != -1 or torrent_name.find("DSNP") != -1):
-                if (torrent_name.find("MULTi") == -1 or torrent_name.find("DSNP") != -1):
+def check_torrent(torrent_name, quality, size, broadcaster=None):
+    if torrent_name.find(quality) != -1 and torrent_name.find("S00") == -1 and check_size(size):        # Right quality, size & not an ova
+        if (torrent_name.find('VOSTFR') != -1 and torrent_name.find("MULTi") == -1):                    # Only VOSTFR
+            if broadcaster != None:
+                if torrent_name.find(broadcaster) != -1:
                     return True
+            elif (torrent_name.find('CR') != -1 or torrent_name.find('ADN') != -1 or torrent_name.find("DSNP") != -1):
+                return True
     return False
+
+def get_broadcaster(keyword):
+    global anime_list
+    for anime in anime_list.data:
+        if anime != [''] and anime[0] == keyword:
+            try:
+                return anime[3]
+            except IndexError:
+                return None
+    return None
 
 def rss_search(keyword_list, quality):
     global new_torrent_found_list
@@ -170,11 +182,13 @@ def rss_search(keyword_list, quality):
         entry_number += 1                                                                                       # Here starts all the verifications on the torrents needed to identify them and making sure they follow certain rules.
 
         for keyword in keyword_list:
+
+            broadcaster = get_broadcaster(keyword)
             
             if keyword != "" and entry.title.find(keyword) != -1:                                                                               # Searching for a torrent with a corresponding keyword.
                 rss_torrent_title = entries[entry_number].title                                                                                 # Then search for the right quality, that has FRE subs or is a DSNP release (multi subs),
                 
-                if check_torrent(rss_torrent_title, quality, entries[entry_number].nyaa_size):                                   # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
+                if check_torrent(rss_torrent_title, quality, entries[entry_number].nyaa_size, broadcaster):                                   # that it comes from CR, ADN or DSNP and that is not an OVA (S00) nor a MULTi release.
                     torrent_index = search_index(rss_torrent_title)                                                                             # Then making sure this torrent is not a film or multiples episodes by checking its size, and then cheking its index (S**E**) is correct or exists
                     
                     if torrent_index != None:
